@@ -5,7 +5,7 @@ orders = pd.read_csv("data/olist_orders_dataset.csv")
 items = pd.read_csv("data/olist_order_items_dataset.csv")
 reviews = pd.read_csv("data/olist_order_reviews_dataset.csv")
 customers = pd.read_csv("data/olist_customers_dataset.csv")
-payments = pd.read_csv("data/olist_payments_dataset.csv")
+payments = pd.read_csv("data/olist_order_payments_dataset.csv")
 
 # Merge into one main dataframe
 df = orders.merge(items, on="order_id", how="left")
