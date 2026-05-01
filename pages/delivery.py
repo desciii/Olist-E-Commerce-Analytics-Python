@@ -4,7 +4,6 @@ import plotly.express as px
 from data_loader import delivered
 from theme import C, PLOTLY_LAYOUT, kpi
 
-
 _d = delivered.copy()
 
 _STATE_OPTIONS = [
@@ -14,6 +13,25 @@ _STATE_OPTIONS = [
 
 _MAX_DAYS = int(_d["delivery_days"].quantile(0.99))  # cap at 99th pct for slider
 
+# ─────────────────────────────────────────────
+# STYLES (Copied from Overview)
+# ─────────────────────────────────────────────
+_DROPDOWN_STYLE = {
+    "borderRadius": "8px",
+    "fontSize": "13px",
+    "color": "black",
+    "backgroundColor": "white"
+}
+
+_LABEL_STYLE = {
+    "fontSize": "11px",
+    "fontWeight": "600",
+    "textTransform": "uppercase",
+    "letterSpacing": "0.06em",
+    "color": C["muted"],
+    "marginBottom": "6px",
+    "display": "block",
+}
 
 # ─────────────────────────────────────────────
 # Helper for filter tag pills
@@ -31,17 +49,6 @@ def _tag(label, bg, color, border):
     })
 
 
-_label_style = {
-    "fontSize": "11px",
-    "fontWeight": "600",
-    "textTransform": "uppercase",
-    "letterSpacing": "0.06em",
-    "color": C["muted"],
-    "marginBottom": "6px",
-    "display": "block",
-}
-
-
 def page_delivery():
     return html.Div([
 
@@ -52,42 +59,37 @@ def page_delivery():
             "color": C["muted"], "marginBottom": "24px"
         }),
 
-        # ── FILTER BAR ──────────────────────────────────────
+        # ── FILTER BAR (Styled to match Overview) ───────────────────────────
         html.Div([
 
             # State filter
             html.Div([
-                html.Label("Customer State", style=_label_style),
+                html.Label("Customer State", style=_LABEL_STYLE),
                 dcc.Dropdown(
                     id="dv-state-filter",
                     options=_STATE_OPTIONS,
                     multi=True,
                     placeholder="All states",
-                    style={"borderRadius": "8px", "fontSize": "13px"},
+                    style=_DROPDOWN_STYLE,
                 ),
             ], style={"flex": "1.5"}),
 
             # Max delivery days
             html.Div([
-                html.Label("Max Delivery Days", style=_label_style),
+                html.Label("Max Delivery Days", style=_LABEL_STYLE),
                 dcc.Dropdown(
                     id="dv-days-filter",
                     options=[{"label": f"Up to {d} days", "value": d}
                              for d in [7, 14, 21, 30, 45, 60, _MAX_DAYS]],
                     value=_MAX_DAYS,
                     clearable=False,
-                    style={
-                        "borderRadius": "8px",
-                        "fontSize": "13px",
-                        "color": "black",
-                        "backgroundColor": "white"
-                    },
+                    style=_DROPDOWN_STYLE,
                 ),
             ], style={"flex": "1"}),
 
             # Late only toggle
             html.Div([
-                html.Label("Delivery Status", style=_label_style),
+                html.Label("Delivery Status", style=_LABEL_STYLE),
                 dcc.Dropdown(
                     id="dv-late-filter",
                     options=[
@@ -97,16 +99,11 @@ def page_delivery():
                     ],
                     value="all",
                     clearable=False,
-                    style={
-                        "borderRadius": "8px",
-                        "fontSize": "13px",
-                        "color": "black",
-                        "backgroundColor": "white"
-                    },
+                    style=_DROPDOWN_STYLE,
                 ),
             ], style={"flex": "1"}),
 
-            # Reset
+            # Reset button
             html.Button("↺  Reset Filters", id="dv-reset-btn", n_clicks=0, style={
                 "alignSelf": "flex-end",
                 "padding": "9px 16px",
@@ -142,21 +139,33 @@ def page_delivery():
         }),
 
         # KPIs
-        html.Div(id="dv-kpis", style={
-            "display": "flex", "gap": "16px", "marginBottom": "28px"
-        }),
+        html.Div(id="dv-kpis", style={"marginBottom": "20px"}),
 
-        # Charts
         html.Div([
-            html.Div(dcc.Graph(id="dv-late-chart", config={"displayModeBar": False}),
-                     style={"flex": "1", "background": C["card"], "borderRadius": "12px",
-                            "border": f"1px solid {C['border']}", "padding": "8px"}),
-            html.Div(dcc.Graph(id="dv-hist-chart", config={"displayModeBar": False}),
-                     style={"flex": "1", "background": C["card"], "borderRadius": "12px",
-                            "border": f"1px solid {C['border']}", "padding": "8px"}),
+            # Chart 1 Container
+            html.Div(
+                dcc.Graph(id="dv-late-chart", config={"displayModeBar": False}),
+                style={
+                    "flex": "1",
+                    "background": C.get("card", "#24293e"),
+                    "borderRadius": "12px",
+                    "border": f"1px solid {C['border']}",
+                    "padding": "12px"
+                }
+            ),
+            # Chart 2 Container
+            html.Div(
+                dcc.Graph(id="dv-hist-chart", config={"displayModeBar": False}),
+                style={
+                    "flex": "1",
+                    "background": C.get("card", "#24293e"),
+                    "borderRadius": "12px",
+                    "border": f"1px solid {C['border']}",
+                    "padding": "12px"
+                }
+            ),
         ], style={"display": "flex", "gap": "16px"}),
     ])
-
 
 # ─────────────────────────────────────────────
 # RESET CALLBACK
@@ -171,12 +180,11 @@ def page_delivery():
 def _reset(_):
     return [], _MAX_DAYS, "all"
 
-
 # ─────────────────────────────────────────────
 # MAIN CALLBACK
 # ─────────────────────────────────────────────
 @callback(
-    Output("dv-kpis",        "children"),
+    Output("dv-kpis",         "children"),
     Output("dv-late-chart",  "figure"),
     Output("dv-hist-chart",  "figure"),
     Output("dv-filter-tags", "children"),

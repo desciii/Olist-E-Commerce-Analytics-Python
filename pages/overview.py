@@ -41,13 +41,6 @@ def _tag(label, bg, color, border):
         "display": "inline-block",
     })
 
-_DROPDOWN_STYLE = {
-    "borderRadius": "8px",
-    "fontSize": "13px",
-    "color": "black",
-    "backgroundColor": "white"
-}
-
 # ─────────────────────────────────────────────
 # PAGE LAYOUT
 # ─────────────────────────────────────────────
@@ -107,7 +100,10 @@ def page_overview():
                     options=_STATUS_OPTIONS,
                     multi=True,
                     placeholder="All statuses",
-                    style=_DROPDOWN_STYLE,
+                    style={
+                        "borderRadius": "8px",
+                        "fontSize": "13px",
+                    },
                 ),
             ], style={"flex": "1.3"}),
 
@@ -128,7 +124,10 @@ def page_overview():
                              for m in sorted(_df["_year_month"].unique())],
                     value=_MIN_YM,
                     clearable=False,
-                    style=_DROPDOWN_STYLE,
+                    style={
+                        "borderRadius": "8px",
+                        "fontSize": "13px",
+                    },
                 ),
             ], style={"flex": "1"}),
 
@@ -149,7 +148,10 @@ def page_overview():
                              for m in sorted(_df["_year_month"].unique())],
                     value=_MAX_YM,
                     clearable=False,
-                    style=_DROPDOWN_STYLE,
+                    style={
+                        "borderRadius": "8px",
+                        "fontSize": "13px",
+                    },
                 ),
             ], style={"flex": "1"}),
 
@@ -189,8 +191,28 @@ def page_overview():
         html.Div(id="ov-kpis", style={"marginBottom": "20px"}),
 
         html.Div([
-            dcc.Graph(id="ov-trend-chart"),
-            dcc.Graph(id="ov-status-chart"),
+            # Monthly Revenue Card
+            html.Div(
+                dcc.Graph(id="ov-trend-chart", config={"displayModeBar": False}),
+                style={
+                    "flex": "1",
+                    "background": C.get("card", "#24293e"),
+                    "borderRadius": "12px",
+                    "border": f"1px solid {C['border']}",
+                    "padding": "12px"
+                }
+            ),
+            # Status Breakdown Card
+            html.Div(
+                dcc.Graph(id="ov-status-chart", config={"displayModeBar": False}),
+                style={
+                    "flex": "1",
+                    "background": C.get("card", "#24293e"),
+                    "borderRadius": "12px",
+                    "border": f"1px solid {C['border']}",
+                    "padding": "12px"
+                }
+            ),
         ], style={"display": "flex", "gap": "16px"}),
     ])
 
@@ -266,7 +288,7 @@ def _update(search, statuses, start_ym, end_ym):
     for s in (statuses or []):
         tags.append(_tag(s.replace("_", " ").title(), "#fff0f0", C["accent3"], C["accent3"]))
     if start_ym != _MIN_YM or end_ym != _MAX_YM:
-        tags.append(_tag(f" {start_ym} → {end_ym}", "#eef6ff", "#4a90e2", "#4a90e2"))
+        tags.append(_tag(f"📅 {start_ym} → {end_ym}", "#eef6ff", "#4a90e2", "#4a90e2"))
     if not tags:
         tags = [_tag("Showing all data", "transparent", C["muted"], C.get("border", "#2a2e3e"))]
 

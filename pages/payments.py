@@ -14,6 +14,25 @@ _TYPE_OPTIONS = [
 
 _MAX_INSTALLMENTS = int(_p["payment_installments"].max())
 
+# ─────────────────────────────────────────────
+# STYLES (Synced with Overview)
+# ─────────────────────────────────────────────
+_DROPDOWN_STYLE = {
+    "borderRadius": "8px",
+    "fontSize": "13px",
+    "color": "black",
+    "backgroundColor": "white"
+}
+
+_LABEL_STYLE = {
+    "fontSize": "11px",
+    "fontWeight": "600",
+    "textTransform": "uppercase",
+    "letterSpacing": "0.06em",
+    "color": C["muted"],
+    "marginBottom": "6px",
+    "display": "block",
+}
 
 # ─────────────────────────────────────────────
 # Helper for filter tag pills
@@ -31,17 +50,6 @@ def _tag(label, bg, color, border):
     })
 
 
-_label_style = {
-    "fontSize": "11px",
-    "fontWeight": "600",
-    "textTransform": "uppercase",
-    "letterSpacing": "0.06em",
-    "color": C["muted"],
-    "marginBottom": "6px",
-    "display": "block",
-}
-
-
 def page_payments():
     return html.Div([
 
@@ -57,58 +65,43 @@ def page_payments():
 
             # Payment type
             html.Div([
-                html.Label("Payment Type", style=_label_style),
+                html.Label("Payment Type", style=_LABEL_STYLE),
                 dcc.Dropdown(
                     id="pm-type-filter",
                     options=_TYPE_OPTIONS,
                     multi=True,
                     placeholder="All types",
-                    style={
-                        "borderRadius": "8px",
-                        "fontSize": "13px",
-                        "color": "black",
-                        "backgroundColor": "white"
-                    },
+                    style=_DROPDOWN_STYLE,
                 ),
             ], style={"flex": "1.5"}),
 
             # Installments
             html.Div([
-                html.Label("Max Installments", style=_label_style),
+                html.Label("Max Installments", style=_LABEL_STYLE),
                 dcc.Dropdown(
                     id="pm-install-filter",
                     options=[{"label": f"Up to {i}", "value": i}
                              for i in [1, 2, 3, 6, 9, 12, _MAX_INSTALLMENTS]],
                     value=_MAX_INSTALLMENTS,
                     clearable=False,
-                    style={
-                        "borderRadius": "8px",
-                        "fontSize": "13px",
-                        "color": "black",
-                        "backgroundColor": "white"
-                    },
+                    style=_DROPDOWN_STYLE,
                 ),
             ], style={"flex": "1"}),
 
             # Min payment value
             html.Div([
-                html.Label("Min Order Value (R$)", style=_label_style),
+                html.Label("Min Order Value (R$)", style=_LABEL_STYLE),
                 dcc.Dropdown(
                     id="pm-minval-filter",
                     options=[{"label": f"R$ {v:,}+", "value": v}
                              for v in [0, 50, 100, 250, 500, 1000]],
                     value=0,
                     clearable=False,
-                    style={
-                        "borderRadius": "8px",
-                        "fontSize": "13px",
-                        "color": "black",
-                        "backgroundColor": "white"
-                    },
+                    style=_DROPDOWN_STYLE,
                 ),
             ], style={"flex": "1"}),
 
-            # Reset
+            # Reset button
             html.Button("↺  Reset Filters", id="pm-reset-btn", n_clicks=0, style={
                 "alignSelf": "flex-end",
                 "padding": "9px 16px",
@@ -144,26 +137,17 @@ def page_payments():
         }),
 
         # KPIs
-        html.Div(id="pm-kpis", style={
-            "display": "flex", "gap": "16px",
-            "marginBottom": "28px", "flexWrap": "wrap",
-        }),
+        html.Div(id="pm-kpis", style={"marginBottom": "20px"}),
 
         # Charts row 1
         html.Div([
-            html.Div(dcc.Graph(id="pm-type-chart", config={"displayModeBar": False}),
-                     style={"flex": "1", "background": C["card"], "borderRadius": "12px",
-                            "border": f"1px solid {C['border']}", "padding": "8px"}),
-            html.Div(dcc.Graph(id="pm-rev-chart", config={"displayModeBar": False}),
-                     style={"flex": "1", "background": C["card"], "borderRadius": "12px",
-                            "border": f"1px solid {C['border']}", "padding": "8px"}),
+            dcc.Graph(id="pm-type-chart", config={"displayModeBar": False}, style={"flex": "1"}),
+            dcc.Graph(id="pm-rev-chart", config={"displayModeBar": False}, style={"flex": "1"}),
         ], style={"display": "flex", "gap": "16px", "marginBottom": "16px"}),
 
         # Chart row 2
         html.Div(
             dcc.Graph(id="pm-install-chart", config={"displayModeBar": False}),
-            style={"background": C["card"], "borderRadius": "12px",
-                   "border": f"1px solid {C['border']}", "padding": "8px"},
         ),
     ])
 
@@ -186,14 +170,14 @@ def _reset(_):
 # MAIN CALLBACK
 # ─────────────────────────────────────────────
 @callback(
-    Output("pm-kpis",         "children"),
-    Output("pm-type-chart",   "figure"),
-    Output("pm-rev-chart",    "figure"),
-    Output("pm-install-chart","figure"),
-    Output("pm-filter-tags",  "children"),
-    Input("pm-type-filter",   "value"),
-    Input("pm-install-filter","value"),
-    Input("pm-minval-filter", "value"),
+    Output("pm-kpis",          "children"),
+    Output("pm-type-chart",    "figure"),
+    Output("pm-rev-chart",     "figure"),
+    Output("pm-install-chart", "figure"),
+    Output("pm-filter-tags",   "children"),
+    Input("pm-type-filter",    "value"),
+    Input("pm-install-filter", "value"),
+    Input("pm-minval-filter",  "value"),
 )
 def _update(types, max_install, min_val):
     filt = _p.copy()
