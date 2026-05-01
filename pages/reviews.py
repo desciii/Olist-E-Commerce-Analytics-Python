@@ -255,7 +255,7 @@ def _update(categories, min_score, max_days):
     if min_score and min_score > 1:
         tags.append(_tag(f"★ {min_score}+ stars", "#e8fff8", C["accent"], C["accent"]))
     if max_days != 60:
-        tags.append(_tag(f"📅 ≤ {max_days} days", "#eef6ff", "#4a90e2", "#4a90e2"))
+        tags.append(_tag(f" ● {max_days} days", "#eef6ff", "#4a90e2", "#4a90e2"))
     if not tags:
         tags = [_tag("Showing all data", "transparent", C["muted"], C.get("border", "#2a2e3e"))]
 

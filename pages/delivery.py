@@ -182,11 +182,11 @@ def _update(states, max_days, late_filter):
 
     if max_days:
         filt = filt[filt["delivery_days"] <= max_days]
-
+        
     if late_filter == "late":
-        filt = filt[filt["late"] == True]
+        filt = filt[filt["late"] == 1]
     elif late_filter == "ontime":
-        filt = filt[filt["late"] == False]
+        filt = filt[filt["late"] == 0]
 
     empty = len(filt) == 0
 
