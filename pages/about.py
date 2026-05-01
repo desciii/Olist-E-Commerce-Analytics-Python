@@ -356,6 +356,103 @@ def page_about():
             "border": f"1px solid {C['border']}",
             "borderRadius": "12px",
             "padding": "28px",
+            "marginBottom": "20px"
         }),
+
+        # ── Built By ────────────────────────────────────────
+        html.Div([
+            section_header("Built By"),
+
+            html.Div([
+                html.Div([
+                    html.Div([
+                        html.Span("Backend Developer", style={
+                            "color": C["accent"],
+                            "fontWeight": "700",
+                            "fontSize": "13.5px",
+                            "letterSpacing": "0.3px"
+                        }),
+                        html.Span(" — Marlou Angelo Panungcat", style={
+                            "color": "white",
+                            "fontSize": "13.5px"
+                        }),
+                    ]),
+
+                    html.Div("BSIT - BTM 3B", style={
+                        "color": C["muted"],
+                        "fontSize": "12px",
+                        "marginTop": "2px"
+                    }),
+                ], style={
+                    "padding": "12px 14px",
+                    "border": f"1px solid {C['border']}",
+                    "borderRadius": "10px",
+                    "background": C["card"],
+                    "marginBottom": "10px",
+                    "transition": "0.2s ease",
+                }),
+
+                html.Div([
+                    html.Div([
+                        html.Span("Frontend Developer", style={
+                            "color": C["accent2"],
+                            "fontWeight": "700",
+                            "fontSize": "13.5px"
+                        }),
+                        html.Span(" — Mishael Suboan", style={
+                            "color": "white",
+                            "fontSize": "13.5px"
+                        }),
+                    ]),
+                    html.Div("BSIT - BTM 3B", style={
+                        "color": C["muted"],
+                        "fontSize": "12px",
+                        "marginTop": "2px"
+                    }),
+                ], style={
+                    "padding": "12px 14px",
+                    "border": f"1px solid {C['border']}",
+                    "borderRadius": "10px",
+                    "background": C["card"],
+                    "marginBottom": "10px",
+                    "transition": "0.2s ease",
+                }),
+
+                html.Div([
+                    html.Div([
+                        html.Span("Data Analyst / Designer", style={
+                            "color": C["accent3"],
+                            "fontWeight": "700",
+                            "fontSize": "13.5px"
+                        }),
+                        html.Span(" — Neilben Balili", style={
+                            "color": "white",
+                            "fontSize": "13.5px"
+                        }),
+                    ]),
+                    html.Div("BSIT - BTM 3B", style={
+                        "color": C["muted"],
+                        "fontSize": "12px",
+                        "marginTop": "2px"
+                    }),
+                ], style={
+                    "padding": "12px 14px",
+                    "border": f"1px solid {C['border']}",
+                    "borderRadius": "10px",
+                    "background": C["card"],
+                    "transition": "0.2s ease",
+                }),
+            ], style={
+                "display": "flex",
+                "flexDirection": "column",
+                "gap": "10px"
+            }),
+
+        ], style={
+            "background": C["card"],
+            "border": f"1px solid {C['border']}",
+            "borderRadius": "14px",
+            "padding": "24px",
+        })
 
     ])
