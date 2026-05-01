@@ -76,7 +76,12 @@ def page_delivery():
                              for d in [7, 14, 21, 30, 45, 60, _MAX_DAYS]],
                     value=_MAX_DAYS,
                     clearable=False,
-                    style={"borderRadius": "8px", "fontSize": "13px"},
+                    style={
+                        "borderRadius": "8px",
+                        "fontSize": "13px",
+                        "color": "black",
+                        "backgroundColor": "white"
+                    },
                 ),
             ], style={"flex": "1"}),
 
@@ -92,7 +97,12 @@ def page_delivery():
                     ],
                     value="all",
                     clearable=False,
-                    style={"borderRadius": "8px", "fontSize": "13px"},
+                    style={
+                        "borderRadius": "8px",
+                        "fontSize": "13px",
+                        "color": "black",
+                        "backgroundColor": "white"
+                    },
                 ),
             ], style={"flex": "1"}),
 

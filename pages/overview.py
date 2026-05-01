@@ -41,6 +41,13 @@ def _tag(label, bg, color, border):
         "display": "inline-block",
     })
 
+_DROPDOWN_STYLE = {
+    "borderRadius": "8px",
+    "fontSize": "13px",
+    "color": "black",
+    "backgroundColor": "white"
+}
+
 # ─────────────────────────────────────────────
 # PAGE LAYOUT
 # ─────────────────────────────────────────────
@@ -100,10 +107,7 @@ def page_overview():
                     options=_STATUS_OPTIONS,
                     multi=True,
                     placeholder="All statuses",
-                    style={
-                        "borderRadius": "8px",
-                        "fontSize": "13px",
-                    },
+                    style=_DROPDOWN_STYLE,
                 ),
             ], style={"flex": "1.3"}),
 
@@ -124,10 +128,7 @@ def page_overview():
                              for m in sorted(_df["_year_month"].unique())],
                     value=_MIN_YM,
                     clearable=False,
-                    style={
-                        "borderRadius": "8px",
-                        "fontSize": "13px",
-                    },
+                    style=_DROPDOWN_STYLE,
                 ),
             ], style={"flex": "1"}),
 
@@ -148,10 +149,7 @@ def page_overview():
                              for m in sorted(_df["_year_month"].unique())],
                     value=_MAX_YM,
                     clearable=False,
-                    style={
-                        "borderRadius": "8px",
-                        "fontSize": "13px",
-                    },
+                    style=_DROPDOWN_STYLE,
                 ),
             ], style={"flex": "1"}),
 
@@ -268,7 +266,7 @@ def _update(search, statuses, start_ym, end_ym):
     for s in (statuses or []):
         tags.append(_tag(s.replace("_", " ").title(), "#fff0f0", C["accent3"], C["accent3"]))
     if start_ym != _MIN_YM or end_ym != _MAX_YM:
-        tags.append(_tag(f"📅 {start_ym} → {end_ym}", "#eef6ff", "#4a90e2", "#4a90e2"))
+        tags.append(_tag(f" {start_ym} → {end_ym}", "#eef6ff", "#4a90e2", "#4a90e2"))
     if not tags:
         tags = [_tag("Showing all data", "transparent", C["muted"], C.get("border", "#2a2e3e"))]
 

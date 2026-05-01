@@ -18,11 +18,39 @@ app = dash.Dash(
         "&family=Syne:wght@700;800&display=swap",
     ],
     title="Olist E-Commerce Analytics",
+    suppress_callback_exceptions=True,
 )
 server = app.server
 
-# app.py  ── find your Dash() constructor and add suppress_callback_exceptions
-app = dash.Dash(__name__, suppress_callback_exceptions=True)
+# Strip Bootstrap's default body margin/padding and scrollbar gutter
+app.index_string = '''
+<!DOCTYPE html>
+<html>
+    <head>
+        {%metas%}
+        <title>{%title%}</title>
+        {%favicon%}
+        {%css%}
+        <style>
+            *, *::before, *::after { box-sizing: border-box; }
+            html, body {
+                margin: 0 !important;
+                padding: 0 !important;
+                overflow-x: hidden;
+                background: ''' + C["bg"] + ''';
+            }
+        </style>
+    </head>
+    <body>
+        {%app_entry%}
+        <footer>
+            {%config%}
+            {%scripts%}
+            {%renderer%}
+        </footer>
+    </body>
+</html>
+'''
 
 # ── Sidebar ────────────────────────────────────────────────────────────────────
 NAV_ITEMS = [
@@ -108,7 +136,13 @@ app.layout = html.Div([
         "fontFamily": "'DM Sans', sans-serif", "color": C["text"],
     }),
     dcc.Store(id="active-tab", data="overview"),
-], style={"background": C["bg"]})
+], style={
+    "background": C["bg"],
+    "margin": "0",
+    "padding": "0",
+    "minHeight": "100vh",
+    "width": "100%",
+})
 
 # ── Callbacks ──────────────────────────────────────────────────────────────────
 @app.callback(

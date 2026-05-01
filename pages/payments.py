@@ -63,7 +63,12 @@ def page_payments():
                     options=_TYPE_OPTIONS,
                     multi=True,
                     placeholder="All types",
-                    style={"borderRadius": "8px", "fontSize": "13px"},
+                    style={
+                        "borderRadius": "8px",
+                        "fontSize": "13px",
+                        "color": "black",
+                        "backgroundColor": "white"
+                    },
                 ),
             ], style={"flex": "1.5"}),
 
@@ -76,7 +81,12 @@ def page_payments():
                              for i in [1, 2, 3, 6, 9, 12, _MAX_INSTALLMENTS]],
                     value=_MAX_INSTALLMENTS,
                     clearable=False,
-                    style={"borderRadius": "8px", "fontSize": "13px"},
+                    style={
+                        "borderRadius": "8px",
+                        "fontSize": "13px",
+                        "color": "black",
+                        "backgroundColor": "white"
+                    },
                 ),
             ], style={"flex": "1"}),
 
@@ -89,7 +99,12 @@ def page_payments():
                              for v in [0, 50, 100, 250, 500, 1000]],
                     value=0,
                     clearable=False,
-                    style={"borderRadius": "8px", "fontSize": "13px"},
+                    style={
+                        "borderRadius": "8px",
+                        "fontSize": "13px",
+                        "color": "black",
+                        "backgroundColor": "white"
+                    },
                 ),
             ], style={"flex": "1"}),
 

@@ -63,7 +63,12 @@ def page_reviews():
                     options=_CAT_OPTIONS,
                     multi=True,
                     placeholder="All categories",
-                    style={"borderRadius": "8px", "fontSize": "13px"},
+                    style={
+                        "borderRadius": "8px",
+                        "fontSize": "13px",
+                        "color": "black",
+                        "backgroundColor": "white"
+                    },
                 ),
             ], style={"flex": "2"}),
 
@@ -75,7 +80,12 @@ def page_reviews():
                     options=_SCORE_OPTIONS,
                     value=1,
                     clearable=False,
-                    style={"borderRadius": "8px", "fontSize": "13px"},
+                    style={
+                        "borderRadius": "8px",
+                        "fontSize": "13px",
+                        "color": "black",
+                        "backgroundColor": "white"
+                    },
                 ),
             ], style={"flex": "1"}),
 
@@ -88,7 +98,12 @@ def page_reviews():
                              for d in [7, 14, 21, 30, 45, 60]],
                     value=60,
                     clearable=False,
-                    style={"borderRadius": "8px", "fontSize": "13px"},
+                    style={
+                        "borderRadius": "8px",
+                        "fontSize": "13px",
+                        "color": "black",
+                        "backgroundColor": "white"
+                    },
                 ),
             ], style={"flex": "1"}),
 
