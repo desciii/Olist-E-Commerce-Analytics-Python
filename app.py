@@ -14,70 +14,96 @@ app = dash.Dash(
     __name__,
     external_stylesheets=[
         dbc.themes.BOOTSTRAP,
-        "https://fonts.googleapis.com/css2?family=DM+Sans:wght@300;400;500;700"
-        "&family=Space+Grotesk:wght@600;700&display=swap",
+        "https://fonts.googleapis.com/css2?family=DM+Sans:wght@300;400;500;600"
+        "&family=Syne:wght@700;800&display=swap",
     ],
     title="Olist E-Commerce Analytics",
 )
-server = app.server  # required for Render deployment
+server = app.server
+
+# app.py  ── find your Dash() constructor and add suppress_callback_exceptions
+app = dash.Dash(__name__, suppress_callback_exceptions=True)
 
 # ── Sidebar ────────────────────────────────────────────────────────────────────
 NAV_ITEMS = [
-    ("🏠", "Overview", "overview"),
-    ("📦", "Delivery", "delivery"),
-    ("⭐", "Reviews",  "reviews"),
-    ("💳", "Payments", "payments"),
-    ("📖", "About",    "about"),
+    ("", "Overview", "overview"),
+    ("", "Delivery", "delivery"),
+    ("", "Reviews",  "reviews"),
+    ("", "Payments", "payments"),
+    ("", "About",    "about"),
 ]
 
 sidebar = html.Div([
-    html.Div([
-        html.Div("◈", style={"fontSize": "28px", "color": C["accent"]}),
-        html.H2("Olist", style={
-            "color": C["text"], "fontFamily": "'Space Grotesk'",
-            "fontWeight": "700", "margin": "0", "fontSize": "22px",
-        }),
-        html.P("E-Commerce Analytics", style={
-            "color": C["muted"], "fontSize": "11px",
-            "margin": "0", "letterSpacing": "1px",
-        }),
-    ], style={"marginBottom": "36px"}),
 
+    # ── Logo ───────────────────────────────────────────────────────────────────
+    html.Div([
+        html.Div("◈", style={
+            "fontSize": "24px",
+            "background": "linear-gradient(135deg, #8b5cf6, #6366f1)",
+            "WebkitBackgroundClip": "text",
+            "WebkitTextFillColor": "transparent",
+            "lineHeight": "1",
+        }),
+        html.Div([
+            html.H2("Olist", style={
+                "color": "#f9fafb", "fontFamily": "'Syne', sans-serif",
+                "fontWeight": "800", "margin": "0",
+                "fontSize": "20px", "letterSpacing": "-0.5px", "lineHeight": "1.1",
+            }),
+            html.P("E-Commerce Analytics", style={
+                "color": "#4b5563", "fontSize": "9.5px", "margin": "0",
+                "letterSpacing": "2px", "textTransform": "uppercase",
+                "fontFamily": "'DM Sans', sans-serif", "paddingTop": "-4px",
+            }),
+        ]),
+    ], style={"display": "flex", "alignItems": "center", "gap": "10px", "marginBottom": "80px"}),
+
+    # ── Nav label ──────────────────────────────────────────────────────────────
+    html.P("Menu", className="sidebar-eyebrow"),
+
+    # ── Nav buttons ───────────────────────────────────────────────────────────
     *[
-        html.Button([icon, " ", label], id=f"btn-{tid}", n_clicks=0, style={
-            "display": "block", "width": "100%", "textAlign": "left",
-            "background": "transparent", "border": "none",
-            "color": C["muted"], "padding": "10px 14px", "borderRadius": "8px",
-            "fontSize": "13px", "cursor": "pointer", "marginBottom": "4px",
-            "fontFamily": "'DM Sans', sans-serif",
-        })
+        html.Button(
+            [html.Span(icon, className="nav-icon"), html.Span(label)],
+            id=f"btn-{tid}",
+            n_clicks=0,
+            className="nav-btn",
+        )
         for icon, label, tid in NAV_ITEMS
     ],
 
+    # ── Footer ─────────────────────────────────────────────────────────────────
     html.Div([
-        html.P("Dataset", style={
-            "color": C["muted"], "fontSize": "10px",
-            "textTransform": "uppercase", "letterSpacing": "1px",
-        }),
-        html.A("Kaggle: Olist",
-               href="https://www.kaggle.com/datasets/olistbr/brazilian-ecommerce",
-               target="_blank",
-               style={"color": C["accent"], "fontSize": "12px", "textDecoration": "none"}),
-    ], style={"position": "absolute", "bottom": "28px", "left": "24px"}),
+        html.Div(className="sidebar-divider"),
+        html.P("Dataset", className="sidebar-eyebrow"),
+        html.A(
+            "↗ Olist on Kaggle",
+            href="https://www.kaggle.com/datasets/olistbr/brazilian-ecommerce",
+            target="_blank",
+            className="sidebar-link",
+            style={
+                "color": "#8b5cf6", "fontSize": "12px", "textDecoration": "none",
+                "padding": "0 14px", "display": "block",
+                "fontFamily": "'DM Sans', sans-serif", "fontWeight": "500",
+                "transition": "color 0.15s ease",
+            },
+        ),
+    ], style={"position": "absolute", "bottom": "24px", "left": "0", "right": "0"}),
 
 ], style={
-    "width": "200px", "minHeight": "100vh",
-    "background": C["card"],
-    "borderRight": f"1px solid {C['border']}",
-    "padding": "28px 20px",
+    "width": "210px", "minHeight": "100vh",
+    "background": "linear-gradient(180deg, #111318 0%, #0d0f14 100%)",
+    "borderRight": "1px solid rgba(255,255,255,0.06)",
+    "padding": "28px 16px",
     "position": "fixed", "top": "0", "left": "0", "zIndex": "100",
+    "boxShadow": "4px 0 24px rgba(0,0,0,0.35)",
 })
 
 # ── Layout ─────────────────────────────────────────────────────────────────────
 app.layout = html.Div([
     sidebar,
     html.Div(id="page-content", style={
-        "marginLeft": "200px", "padding": "36px 40px",
+        "marginLeft": "210px", "padding": "36px 40px",
         "minHeight": "100vh", "background": C["bg"],
         "fontFamily": "'DM Sans', sans-serif", "color": C["text"],
     }),
@@ -95,6 +121,17 @@ def switch_tab(*args):
     if not ctx.triggered:
         return "overview"
     return ctx.triggered[0]["prop_id"].split(".")[0].replace("btn-", "")
+
+
+@app.callback(
+    [Output(f"btn-{tid}", "className") for _, _, tid in NAV_ITEMS],
+    Input("active-tab", "data"),
+)
+def highlight_nav(active_tab):
+    return [
+        "nav-btn active" if tid == active_tab else "nav-btn"
+        for _, _, tid in NAV_ITEMS
+    ]
 
 
 @app.callback(Output("page-content", "children"), Input("active-tab", "data"))

@@ -26,25 +26,22 @@ def page_about():
 
         html.Div([
             info_card(
-                "Business Problem",
+                "So what is the Business Problem?",
                 "E-commerce operators need visibility into order performance, delivery reliability, "
                 "and customer satisfaction. This dashboard helps operations and marketing teams "
                 "identify bottlenecks and areas of improvement.",
-                "🎯",
             ),
             info_card(
-                "Who It's For",
+                "Who is it For?",
                 "Operations managers tracking delivery KPIs, marketing teams analyzing customer "
                 "satisfaction by product category, and finance teams reviewing payment trends.",
-                "👥",
             ),
             info_card(
-                "Key Questions Answered",
+                "What questions does this answer?",
                 "• Which states have the worst delivery times?\n"
                 "• What product categories get the worst reviews?\n"
                 "• What payment methods drive the most revenue?\n"
                 "• How is revenue trending month over month?",
-                "❓",
             ),
         ], style={"display": "flex", "gap": "16px", "flexWrap": "wrap", "marginBottom": "24px"}),
 
