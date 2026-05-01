@@ -22,7 +22,7 @@ _SCORE_OPTIONS = [{"label": f"{i} Stars & Up", "value": i} for i in range(1, 6)]
 _DROPDOWN_STYLE = {
     "borderRadius": "8px",
     "fontSize": "13px",
-    "color": C.get("text", "#e8eaf6"),
+    "color": "black",
     "backgroundColor": C.get("surface", "#1e2235"),
     "border": f"1px solid {C.get('border', '#2a2e3e')}",
 }

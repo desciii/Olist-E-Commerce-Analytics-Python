@@ -141,13 +141,46 @@ def page_payments():
 
         # Charts row 1
         html.Div([
-            dcc.Graph(id="pm-type-chart", config={"displayModeBar": False}, style={"flex": "1"}),
-            dcc.Graph(id="pm-rev-chart", config={"displayModeBar": False}, style={"flex": "1"}),
-        ], style={"display": "flex", "gap": "16px", "marginBottom": "16px"}),
+            html.Div(
+                dcc.Graph(id="pm-type-chart", config={"displayModeBar": False}),
+                style={
+                    "flex": "1",
+                    "background": C.get("card", "#24293e"),
+                    "borderRadius": "12px",
+                    "border": f"1px solid {C['border']}",
+                    "padding": "12px"
+                }
+            ),
+            html.Div(
+                dcc.Graph(id="pm-rev-chart", config={"displayModeBar": False}),
+                style={
+                    "flex": "1",
+                    "background": C.get("card", "#24293e"),
+                    "borderRadius": "12px",
+                    "border": f"1px solid {C['border']}",
+                    "padding": "12px"
+                }
+            ),
+        ], style={
+            "display": "flex",
+            "gap": "16px",
+            "marginBottom": "16px"
+        }),
 
         # Chart row 2
         html.Div(
-            dcc.Graph(id="pm-install-chart", config={"displayModeBar": False}),
+            html.Div(
+                dcc.Graph(id="pm-install-chart", config={"displayModeBar": False}),
+                style={
+                    "background": C.get("card", "#24293e"),
+                    "borderRadius": "12px",
+                    "border": f"1px solid {C['border']}",
+                    "padding": "12px",
+                }
+            ),
+            style={
+                "width": "100%"
+            }
         ),
     ])
 

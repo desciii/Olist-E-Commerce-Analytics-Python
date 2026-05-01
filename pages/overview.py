@@ -103,6 +103,7 @@ def page_overview():
                     style={
                         "borderRadius": "8px",
                         "fontSize": "13px",
+                        "color": "black",
                     },
                 ),
             ], style={"flex": "1.3"}),
@@ -127,6 +128,7 @@ def page_overview():
                     style={
                         "borderRadius": "8px",
                         "fontSize": "13px",
+                        "color": "black",
                     },
                 ),
             ], style={"flex": "1"}),
@@ -151,6 +153,7 @@ def page_overview():
                     style={
                         "borderRadius": "8px",
                         "fontSize": "13px",
+                        "color": "black",
                     },
                 ),
             ], style={"flex": "1"}),
