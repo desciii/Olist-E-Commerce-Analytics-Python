@@ -395,7 +395,7 @@ def page_about():
                 html.Div([
                     html.Div([
                         html.Span("Frontend Developer", style={
-                            "color": C["accent2"],
+                            "color": C["accent"],
                             "fontWeight": "700",
                             "fontSize": "13.5px"
                         }),
@@ -421,7 +421,7 @@ def page_about():
                 html.Div([
                     html.Div([
                         html.Span("Data Analyst / Designer", style={
-                            "color": C["accent3"],
+                            "color": C["accent"],
                             "fontWeight": "700",
                             "fontSize": "13.5px"
                         }),
