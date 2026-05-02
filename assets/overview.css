@@ -1,0 +1,91 @@
+.ov-charts {
+    display: flex;
+    gap: 16px;
+    align-items: stretch;
+}
+
+.ov-charts > div {
+    flex: 1;
+}
+
+@media (max-width: 640px) {
+    .ov-charts {
+        flex-direction: column;
+    }
+
+    .ov-chart-card {
+        width: 100%;
+        background: #24293e;
+        border-radius: 12px;
+        border: 1px solid #2a2e3e;
+        padding: 12px;
+    }
+
+    /* Push page content down below the navbar */
+    .page-content {
+        margin-left: 0 !important;
+        padding-top: 72px !important;
+        padding-left: 16px !important;
+        padding-right: 16px !important;
+    }
+
+    /* Logo stays on the left */
+    .logo-wrapper {
+        margin-bottom: 0 !important;
+        flex-shrink: 0;
+    }
+
+    /* Nav buttons sit in a row on the right */
+    .nav-btn {
+        flex-direction: column;
+        align-items: center;
+        justify-content: center;
+        gap: 2px;
+        width: auto;
+        flex: 0 0 auto;
+        padding: 6px 10px;
+        margin: 0;
+        border-radius: 8px;
+        font-size: 10px;
+    }
+
+    .nav-label {
+        display: block;
+        font-size: 10px;
+        font-weight: 500;
+        line-height: 1;
+        letter-spacing: 0.02em;
+        color: inherit;
+        white-space: nowrap;
+    }
+
+    .nav-icon {
+        font-size: 17px;
+        width: auto;
+        margin-right: 0;
+    }
+
+    /* Active state — underline instead of left border */
+    .nav-btn.active {
+        color: #f9fafb;
+        background: rgba(139, 92, 246, 0.15);
+        box-shadow: inset 0 -3px 0 #8b5cf6;
+        border-radius: 0;
+        font-weight: 600;
+    }
+
+    /* Hide sidebar chrome that doesn't belong in a topbar */
+    .sidebar-eyebrow,
+    .sidebar-divider,
+    .sidebar-footer,
+    .logo-text {
+        display: none !important;
+    }
+
+    /* Disable tooltip */
+    .nav-btn::after,
+    .nav-btn::before {
+        display: none !important;
+    }
+
+}

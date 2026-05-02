@@ -8,6 +8,8 @@ from pages.delivery import page_delivery
 from pages.reviews  import page_reviews
 from pages.payments import page_payments
 from pages.about    import page_about
+from dash import clientside_callback
+
 
 # ── App init ───────────────────────────────────────────────────────────────────
 app = dash.Dash(
@@ -22,7 +24,6 @@ app = dash.Dash(
 )
 server = app.server
 
-# Strip Bootstrap's default body margin/padding and scrollbar gutter
 app.index_string = '''
 <!DOCTYPE html>
 <html>
@@ -52,18 +53,19 @@ app.index_string = '''
 </html>
 '''
 
-# ── Sidebar ────────────────────────────────────────────────────────────────────
+# ── Nav items ──────────────────────────────────────────────────────────────────
 NAV_ITEMS = [
     ("", "Overview", "overview"),
     ("", "Delivery", "delivery"),
     ("", "Reviews",  "reviews"),
     ("", "Payments", "payments"),
-    ("", "About",    "about"),
+    ("",  "About",    "about"),
 ]
 
+# ── Sidebar ────────────────────────────────────────────────────────────────────
 sidebar = html.Div([
 
-    # ── Logo ───────────────────────────────────────────────────────────────────
+    # Logo
     html.Div([
         html.Div("◈", style={
             "fontSize": "24px",
@@ -71,36 +73,54 @@ sidebar = html.Div([
             "WebkitBackgroundClip": "text",
             "WebkitTextFillColor": "transparent",
             "lineHeight": "1",
+            "minWidth": "24px",
         }),
         html.Div([
             html.H2("Olist", style={
-                "color": "#f9fafb", "fontFamily": "'Syne', sans-serif",
-                "fontWeight": "800", "margin": "0",
-                "fontSize": "20px", "letterSpacing": "-0.5px", "lineHeight": "1.1",
+                "color": "#f9fafb",
+                "fontFamily": "'Syne', sans-serif",
+                "fontWeight": "800",
+                "margin": "0",
+                "fontSize": "20px",
+                "letterSpacing": "-0.5px",
+                "lineHeight": "1.1",
             }),
             html.P("E-Commerce Analytics", style={
-                "color": "#4b5563", "fontSize": "9.5px", "margin": "0",
-                "letterSpacing": "2px", "textTransform": "uppercase",
-                "fontFamily": "'DM Sans', sans-serif", "paddingTop": "-4px",
+                "color": "#4b5563",
+                "fontSize": "9.5px",
+                "margin": "0",
+                "letterSpacing": "2px",
+                "textTransform": "uppercase",
+                "fontFamily": "'DM Sans', sans-serif",
             }),
-        ]),
-    ], style={"display": "flex", "alignItems": "center", "gap": "10px", "marginBottom": "80px"}),
+        ], className="logo-text"),
+    ], className="logo-wrapper", style={
+        "display": "flex",
+        "alignItems": "center",
+        "gap": "10px",
+        "marginBottom": "32px",
+        "paddingLeft": "4px",
+    }),
 
-    # ── Nav label ──────────────────────────────────────────────────────────────
+    # Nav label
     html.P("Menu", className="sidebar-eyebrow"),
 
-    # ── Nav buttons ───────────────────────────────────────────────────────────
+    # Nav buttons
     *[
         html.Button(
-            [html.Span(icon, className="nav-icon"), html.Span(label)],
+            [
+                html.Span(icon, className="nav-icon"),
+                html.Span(label, className="nav-label"),
+            ],
             id=f"btn-{tid}",
             n_clicks=0,
             className="nav-btn",
+            **{"data-label": label},
         )
         for icon, label, tid in NAV_ITEMS
     ],
 
-    # ── Footer ─────────────────────────────────────────────────────────────────
+    # Footer
     html.Div([
         html.Div(className="sidebar-divider"),
         html.P("Dataset", className="sidebar-eyebrow"),
@@ -110,30 +130,46 @@ sidebar = html.Div([
             target="_blank",
             className="sidebar-link",
             style={
-                "color": "#8b5cf6", "fontSize": "12px", "textDecoration": "none",
-                "padding": "0 14px", "display": "block",
-                "fontFamily": "'DM Sans', sans-serif", "fontWeight": "500",
+                "color": "#8b5cf6",
+                "fontSize": "12px",
+                "textDecoration": "none",
+                "padding": "0 14px",
+                "display": "block",
+                "fontFamily": "'DM Sans', sans-serif",
+                "fontWeight": "500",
                 "transition": "color 0.15s ease",
             },
         ),
-    ], style={"position": "absolute", "bottom": "24px", "left": "0", "right": "0"}),
+    ], className="sidebar-footer", style={
+        "marginTop": "auto",
+    }),
 
-], style={
-    "width": "210px", "minHeight": "100vh",
+], className="sidebar", style={
+    "width": "210px",
+    "minHeight": "100vh",
     "background": "linear-gradient(180deg, #111318 0%, #0d0f14 100%)",
     "borderRight": "1px solid rgba(255,255,255,0.06)",
     "padding": "28px 16px",
-    "position": "fixed", "top": "0", "left": "0", "zIndex": "100",
+    "position": "fixed",
+    "top": "0", "left": "0",
+    "zIndex": "100",
     "boxShadow": "4px 0 24px rgba(0,0,0,0.35)",
+    "display": "flex",
+    "flexDirection": "column",
+    "overflowY": "auto",
+    "overflowX": "hidden",
 })
 
-# ── Layout ─────────────────────────────────────────────────────────────────────
+# ── App layout ─────────────────────────────────────────────────────────────────
 app.layout = html.Div([
     sidebar,
-    html.Div(id="page-content", style={
-        "marginLeft": "210px", "padding": "36px 40px",
-        "minHeight": "100vh", "background": C["bg"],
-        "fontFamily": "'DM Sans', sans-serif", "color": C["text"],
+    html.Div(id="page-content", className="page-content", style={
+        "marginLeft": "210px",
+        "padding": "36px 40px",
+        "minHeight": "100vh",
+        "background": C["bg"],
+        "fontFamily": "'DM Sans', sans-serif",
+        "color": C["text"],
     }),
     dcc.Store(id="active-tab", data="overview"),
 ], style={
@@ -143,6 +179,9 @@ app.layout = html.Div([
     "minHeight": "100vh",
     "width": "100%",
 })
+
+dcc.Store(id="screen-size"),
+dcc.Interval(id="screen-interval", interval=1000, n_intervals=0),
 
 # ── Callbacks ──────────────────────────────────────────────────────────────────
 @app.callback(
@@ -167,6 +206,16 @@ def highlight_nav(active_tab):
         for _, _, tid in NAV_ITEMS
     ]
 
+
+clientside_callback(
+    """
+    function(n) {
+        return window.innerWidth;
+    }
+    """,
+    Output("screen-size", "data"),
+    Input("screen-interval", "n_intervals"),
+)
 
 @app.callback(Output("page-content", "children"), Input("active-tab", "data"))
 def render(tab):

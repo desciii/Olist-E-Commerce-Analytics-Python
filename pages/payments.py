@@ -142,9 +142,9 @@ def page_payments():
         # Charts row 1
         html.Div([
             html.Div(
-                dcc.Graph(id="pm-type-chart", config={"displayModeBar": False}),
+                dcc.Graph(id="pm-type-chart", config={"displayModeBar": False, "responsive": True}),
+                className="pm-chart-card",
                 style={
-                    "flex": "1",
                     "background": C.get("card", "#24293e"),
                     "borderRadius": "12px",
                     "border": f"1px solid {C['border']}",
@@ -152,25 +152,22 @@ def page_payments():
                 }
             ),
             html.Div(
-                dcc.Graph(id="pm-rev-chart", config={"displayModeBar": False}),
+                dcc.Graph(id="pm-rev-chart", config={"displayModeBar": False, "responsive": True}),
+                className="pm-chart-card",
                 style={
-                    "flex": "1",
                     "background": C.get("card", "#24293e"),
                     "borderRadius": "12px",
                     "border": f"1px solid {C['border']}",
                     "padding": "12px"
                 }
             ),
-        ], style={
-            "display": "flex",
-            "gap": "16px",
-            "marginBottom": "16px"
-        }),
+        ], className="pm-charts-row"),
 
         # Chart row 2
-        html.Div(
+        html.Div([
             html.Div(
-                dcc.Graph(id="pm-install-chart", config={"displayModeBar": False}),
+                dcc.Graph(id="pm-install-chart", config={"displayModeBar": False, "responsive": True}),
+                className="pm-chart-card",
                 style={
                     "background": C.get("card", "#24293e"),
                     "borderRadius": "12px",
@@ -178,10 +175,7 @@ def page_payments():
                     "padding": "12px",
                 }
             ),
-            style={
-                "width": "100%"
-            }
-        ),
+        ], className="pm-charts-row"),
     ])
 
 

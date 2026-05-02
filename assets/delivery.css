@@ -1,0 +1,21 @@
+.dv-charts {
+    display: flex;
+    gap: 16px;
+    align-items: stretch;
+}
+.dv-charts > div {
+    flex: 1;
+}
+
+@media (max-width: 640px) {
+    .dv-charts {
+        flex-direction: column;
+    }
+    .dv-chart-card {
+        width: 100%;
+        background: #24293e;
+        border-radius: 12px;
+        border: 1px solid #2a2e3e;
+        padding: 12px;
+    }
+}

@@ -45,3 +45,25 @@ def kpi(title, value, sub="", color=C["accent"]):
         "flex":         "1",
         "minWidth":     "160px",
     })
+
+    # ─────────────────────────────────────────────
+# MOBILE PLOTLY LAYOUT (Compact Charts)
+# ─────────────────────────────────────────────
+
+MOBILE_PLOTLY_LAYOUT = {
+    "margin": dict(l=30, r=10, t=35, b=30),
+    "title": {"font": {"size": 13}},
+    "legend": {
+        "font": {"size": 10},
+        "orientation": "h",
+        "y": -0.25
+    },
+    "xaxis": {
+        "tickfont": {"size": 10},
+        "title": {"font": {"size": 11}}
+    },
+    "yaxis": {
+        "tickfont": {"size": 10},
+        "title": {"font": {"size": 11}}
+    }
+}

@@ -202,7 +202,8 @@ def page_overview():
                     "background": C.get("card", "#24293e"),
                     "borderRadius": "12px",
                     "border": f"1px solid {C['border']}",
-                    "padding": "12px"
+                    "padding": "12px",
+                    "marginBottom": "16px",
                 }
             ),
             # Status Breakdown Card
@@ -213,10 +214,11 @@ def page_overview():
                     "background": C.get("card", "#24293e"),
                     "borderRadius": "12px",
                     "border": f"1px solid {C['border']}",
-                    "padding": "12px"
+                    "padding": "12px",
+                    "marginBottom": "16px",
                 }
             ),
-        ], style={"display": "flex", "gap": "16px"}),
+        ], className="ov-charts")
     ])
 
 # ─────────────────────────────────────────────

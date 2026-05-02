@@ -140,23 +140,29 @@ def page_reviews():
 
         # Charts row 1
         html.Div([
-            html.Div(dcc.Graph(id="rv-dist-chart", config={"displayModeBar": False}),
-                     style={"flex": "1", "background": C.get("card", "#24293e"), "borderRadius": "12px",
+            html.Div(dcc.Graph(id="rv-dist-chart", config={"displayModeBar": False, "responsive": True}),
+                    className="rv-chart-card",
+                    style={"background": C.get("card", "#24293e"), "borderRadius": "12px",
                             "border": f"1px solid {C['border']}", "padding": "12px"}),
-            html.Div(dcc.Graph(id="rv-scatter-chart", config={"displayModeBar": False}),
-                     style={"flex": "1", "background": C.get("card", "#24293e"), "borderRadius": "12px",
+
+            html.Div(dcc.Graph(id="rv-scatter-chart", config={"displayModeBar": False, "responsive": True}),
+                    className="rv-chart-card",
+                    style={"background": C.get("card", "#24293e"), "borderRadius": "12px",
                             "border": f"1px solid {C['border']}", "padding": "12px"}),
-        ], style={"display": "flex", "gap": "16px", "marginBottom": "16px"}),
+        ], className="rv-charts-row"),
 
         # Charts row 2
         html.Div([
             html.Div(dcc.Graph(id="rv-worst-chart", config={"displayModeBar": False}),
-                     style={"flex": "1", "background": C.get("card", "#24293e"), "borderRadius": "12px",
+                    className="rv-chart-card",
+                    style={"background": C.get("card", "#24293e"), "borderRadius": "12px",
                             "border": f"1px solid {C['border']}", "padding": "12px"}),
-            html.Div(dcc.Graph(id="rv-best-chart",  config={"displayModeBar": False}),
-                     style={"flex": "1", "background": C.get("card", "#24293e"), "borderRadius": "12px",
+
+            html.Div(dcc.Graph(id="rv-best-chart", config={"displayModeBar": False}),
+                    className="rv-chart-card",
+                    style={"background": C.get("card", "#24293e"), "borderRadius": "12px",
                             "border": f"1px solid {C['border']}", "padding": "12px"}),
-        ], style={"display": "flex", "gap": "16px"}),
+        ], className="rv-charts-row"),
     ])
 
 # ─────────────────────────────────────────────
@@ -183,7 +189,10 @@ def _reset(_):
     Input("rv-minscore-filter", "value"),
     Input("rv-days-filter", "value"),
 )
+
+
 def _update(categories, min_score, max_days):
+    layout_used = PLOTLY_LAYOUT
     filt = _d.copy()
 
     if categories:
@@ -214,7 +223,7 @@ def _update(categories, min_score, max_days):
     score_dist = filt["review_score"].value_counts().sort_index().reset_index()
     score_dist.columns = ["score", "count"]
     fig_dist = px.bar(score_dist, x="score", y="count", color_discrete_sequence=[C["accent3"]])
-    fig_dist.update_layout(**PLOTLY_LAYOUT, title="Review Score Distribution")
+    fig_dist.update_layout(**layout_used, title="Review Score Distribution")
 
     scatter = filt[filt["delivery_days"] < max_days]
     fig_scatter = px.scatter(
@@ -223,25 +232,25 @@ def _update(categories, min_score, max_days):
         color="review_score",
         color_continuous_scale=["#ff6b6b", "#ffd166", "#00d4aa"]
     )
-    fig_scatter.update_layout(**PLOTLY_LAYOUT, title="Review Score vs Delivery Time")
+    fig_scatter.update_layout(**layout_used, title="Review Score vs Delivery Time")
 
     cat_review = filt.groupby("product_category_name_english")["review_score"].mean().reset_index().dropna().sort_values("review_score")
     
     fig_worst = px.bar(cat_review.head(10), x="review_score", y="product_category_name_english", orientation="h", color_discrete_sequence=[C["accent2"]])
-    fig_worst.update_layout(**PLOTLY_LAYOUT, title="10 Lowest Rated Categories")
+    fig_worst.update_layout(**layout_used, title="10 Lowest Rated Categories")
 
     fig_best = px.bar(cat_review.tail(10), x="review_score", y="product_category_name_english", orientation="h", color_discrete_sequence=[C["accent"]])
-    fig_best.update_layout(**PLOTLY_LAYOUT, title="10 Highest Rated Categories")
+    fig_best.update_layout(**layout_used, title="10 Highest Rated Categories")
 
     # Filter Tags logic
     tags = []
     if categories:
         for c in categories:
-            tags.append(_tag(f"● {c.title()}", "#fff0f0", C["accent3"], C["accent3"]))
+            tags.append(_tag(f" {c.title()}", "#fff0f0", C["accent3"], C["accent3"]))
     if min_score and min_score > 1:
-        tags.append(_tag(f"★ {min_score}+ Stars", "#e8fff8", C["accent"], C["accent"]))
+        tags.append(_tag(f" {min_score}+ Stars", "#e8fff8", C["accent"], C["accent"]))
     if max_days < 60:
-        tags.append(_tag(f"⏱ <{max_days} Days", "#eef6ff", "#4a90e2", "#4a90e2"))
+        tags.append(_tag(f" <{max_days} Days", "#eef6ff", "#4a90e2", "#4a90e2"))
     
     if not tags:
         tags = [_tag("Showing all data", "transparent", C["muted"], C.get("border", "#2a2e3e"))]

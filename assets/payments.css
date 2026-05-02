@@ -1,0 +1,47 @@
+/* ─────────────────────────────────────────────
+   PAYMENT PAGE LAYOUT FIXES
+───────────────────────────────────────────── */
+
+.pm-charts-row {
+    display: flex;
+    gap: 16px;
+    align-items: stretch;
+    margin-bottom: 16px;
+}
+
+/* chart containers */
+.pm-chart-card {
+    flex: 1;
+    min-width: 0;          /* IMPORTANT for Plotly */
+    width: 100%;
+    display: flex;
+}
+
+/* force Plotly graphs to fill container properly */
+.pm-chart-card > div {
+    width: 100% !important;
+}
+
+
+/* ─────────────────────────────────────────────
+   FILTER RESPONSIVENESS
+───────────────────────────────────────────── */
+
+@media (max-width: 640px) {
+
+    /* stack filter dropdowns */
+    #pm-type-filter,
+    #pm-install-filter,
+    #pm-minval-filter {
+        width: 100%;
+    }
+
+    /* stack chart rows */
+    .pm-charts-row {
+        flex-direction: column;
+    }
+
+    .pm-chart-card {
+        width: 100%;
+    }
+}

@@ -164,7 +164,7 @@ def page_delivery():
                     "padding": "12px"
                 }
             ),
-        ], style={"display": "flex", "gap": "16px"}),
+        ], className="dv-charts"),
     ])
 
 # ─────────────────────────────────────────────

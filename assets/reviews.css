@@ -1,0 +1,27 @@
+.rv-charts-row {
+    display: flex;
+    gap: 16px;
+    align-items: stretch;
+    margin-bottom: 16px;
+}
+
+.rv-chart-card {
+    flex: 1;
+    min-width: 0;
+    width: 100%;
+    display: flex;
+}
+
+.rv-chart-card > div {
+    width: 100% !important;
+}
+
+@media (max-width: 640px) {
+    .rv-charts-row {
+        flex-direction: column;
+    }
+
+    .rv-chart-card {
+        width: 100%;
+    }
+}
