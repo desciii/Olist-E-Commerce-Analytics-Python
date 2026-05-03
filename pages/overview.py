@@ -26,7 +26,7 @@ LABEL_STYLE = {
     "fontWeight": "600",
     "textTransform": "uppercase",
     "letterSpacing": "0.06em",
-    "color": C["muted"],
+    "color": "white",
     "marginBottom": "6px",
     "display": "block",
 }
@@ -37,7 +37,7 @@ INPUT_STYLE = {
     "borderRadius": "8px",
     "border": f"1px solid {C.get('border', '#2a2e3e')}",
     "background": C.get("surface", "#1e2235"),
-    "color": C.get("text", "#e8eaf6"),
+    "color": "white",
     "fontSize": "13px",
     "outline": "none",
     "boxSizing": "border-box",
@@ -93,8 +93,8 @@ def page_overview():
                     id="ov-search",
                     type="text",
                     debounce=True,
-                    placeholder="Type order id prefix…",
-                    style=INPUT_STYLE,
+                    placeholder="Type Order ID",
+                    style=INPUT_STYLE ,
                 ),
             ], style={"flex": "1 1 220px", "minWidth": "180px"}),
 

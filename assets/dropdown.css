@@ -1,0 +1,103 @@
+/* ─────────────────────────────────────────────
+   CONTROL (BUTTON AREA ONLY)
+   ───────────────────────────────────────────── */
+
+/* Main dropdown button */
+.dash-dropdown-wrapper button {
+    background-color: #1e2235 !important;
+    border: 1px solid #2a2e3e !important;
+    color: #e8eaf6 !important;
+}
+
+/* Focus / hover state of control */
+.dash-dropdown-wrapper button:hover,
+.dash-dropdown-wrapper button:focus {
+    border-color: #8b5cf6 !important;
+    box-shadow: none !important;
+}
+
+/* Selected value text */
+.dash-dropdown-value,
+.dash-dropdown-value-item {
+    color: #e8eaf6 !important;
+}
+
+/* Multi-select pills */
+.dash-dropdown-value-item {
+    background-color: #2a2e3e !important;
+    border: 1px solid #8b5cf6 !important;
+    color: #e8eaf6 !important;
+    border-radius: 6px !important;
+}
+
+/* Placeholder text */
+.dash-dropdown-wrapper [data-placeholder] {
+    color: #6b7280 !important;
+}
+
+
+/* ─────────────────────────────────────────────
+   KEEP DROPDOWN MENU DEFAULT (WHITE)
+   ───────────────────────────────────────────── */
+
+/* IMPORTANT: do NOT force dark background here */
+/* Let Dash / React Select render default white menu */
+
+/* Only fix border consistency */
+[data-radix-popper-content-wrapper] {
+    border-radius: 8px !important;
+    overflow: hidden;
+}
+
+
+/* ─────────────────────────────────────────────
+   SELECT ALL / TOOLBAR FIX (NO WHITE BAR)
+   ───────────────────────────────────────────── */
+
+/* This removes the white strip but keeps menu white */
+.dash-dropdown-select-all,
+.dash-dropdown-deselect-all {
+    background: transparent !important;
+    color: #111827 !important;
+    border: none !important;
+}
+
+/* Toolbar container only blends into white menu */
+.dash-dropdown-menu [role="toolbar"] {
+    background: transparent !important;
+    border-bottom: 1px solid #e5e7eb !important;
+}
+
+
+/* ─────────────────────────────────────────────
+   SEARCH INPUT INSIDE DROPDOWN
+   ───────────────────────────────────────────── */
+
+.dash-dropdown-search input {
+    background-color: #ffffff !important;
+    color: #111827 !important;
+    border: 1px solid #d1d5db !important;
+}
+
+
+/* ─────────────────────────────────────────────
+   OPTIONS (KEEP DEFAULT WHITE FEEL)
+   ───────────────────────────────────────────── */
+
+/* Only refine hover + selected states */
+.dash-dropdown-option:hover,
+[role="option"]:hover {
+    background-color: #f3f4f6 !important;
+}
+
+.dash-dropdown-option[data-selected="true"],
+[role="option"][aria-selected="true"] {
+    background-color: #e9d5ff !important;
+    color: #111827 !important;
+}
+
+.drop-down-action-button {
+    background: transparent !important;
+    border: none !important;
+    color: white !important;
+}
