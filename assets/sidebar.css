@@ -67,7 +67,7 @@
 }
 
 /* ── Top navbar (≤640px) ── */
-@media (max-width: 640px) {
+@media (max-width: 768px) {
     .sidebar {
         width: 100% !important;
         min-width: 100% !important;
