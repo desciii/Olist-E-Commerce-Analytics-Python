@@ -1,6 +1,5 @@
 from dash import dcc, html, Input, Output, callback
 import plotly.express as px
-import pandas as pd
 
 from data_loader import df
 from theme import C, PLOTLY_LAYOUT, kpi
@@ -9,14 +8,7 @@ from theme import C, PLOTLY_LAYOUT, kpi
 # Prepare dataframe once
 # ─────────────────────────────────────────────
 _df = df.copy()
-
-if "order_purchase_timestamp" in _df.columns:
-    _df["order_purchase_timestamp"] = pd.to_datetime(
-        _df["order_purchase_timestamp"], errors="coerce"
-    )
-    _df["_year_month"] = _df["order_purchase_timestamp"].dt.to_period("M").astype(str)
-else:
-    _df["_year_month"] = _df["month"].astype(str).str[:7]
+_df["_year_month"] = _df["month"].astype(str) # already computed in parquet
 
 _STATUS_OPTIONS = [
     {"label": s.replace("_", " ").title(), "value": s}

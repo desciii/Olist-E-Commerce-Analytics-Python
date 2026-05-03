@@ -24,7 +24,7 @@ df = df.merge(
 )
 df = df.merge(customers, on="customer_id", how="left")
 df = df.merge(
-    payments[["order_id", "payment_type", "payment_value"]].drop_duplicates("order_id"),
+    payments[["order_id", "payment_type", "payment_value", "payment_installments"]].drop_duplicates("order_id"),
     on="order_id", how="left"
 )
 df = df.merge(

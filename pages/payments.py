@@ -1,11 +1,11 @@
 from dash import dcc, html, Input, Output, callback
 import plotly.express as px
 
-from data_loader import payments
+from data_loader import df
 from theme import C, PLOTLY_LAYOUT, kpi
 
-
-_p = payments.copy()
+# Use only payment-relevant columns from the merged df
+_p = df[["order_id", "payment_type", "payment_value", "payment_installments"]].drop_duplicates().copy()
 
 _TYPE_OPTIONS = [
     {"label": t.replace("_", " ").title(), "value": t}
