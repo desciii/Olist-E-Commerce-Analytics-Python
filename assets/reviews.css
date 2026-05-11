@@ -1,15 +1,15 @@
-.rv-charts-row {
+.rv-charts-grid {
     display: flex;
+    flex-wrap: wrap;
     gap: 16px;
-    align-items: stretch;
     margin-bottom: 16px;
 }
 
 .rv-chart-card {
-    flex: 1;
+    flex: 0 0 calc(50% - 8px);
+    max-width: calc(50% - 8px);
     min-width: 0;
-    width: 100%;
-    display: flex;
+    box-sizing: border-box;
 }
 
 .rv-chart-card > div {
@@ -17,11 +17,8 @@
 }
 
 @media (max-width: 640px) {
-    .rv-charts-row {
-        flex-direction: column;
-    }
-
     .rv-chart-card {
-        width: 100%;
+        flex: 1 1 100%;
+        max-width: 100%;
     }
 }

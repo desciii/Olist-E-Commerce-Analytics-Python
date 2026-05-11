@@ -102,7 +102,7 @@ def page_delivery():
                 dcc.Dropdown(
                     id="dv-days-filter",
                     options=[{"label": f"Up to {d} days", "value": d}
-                             for d in [7, 14, 21, 30, 45, 60, _MAX_DAYS]],
+                             for d in [7, 14, 21, 30, 45, 60]],
                     value=_MAX_DAYS,
                     clearable=False,
                     style=_DROPDOWN_STYLE,
