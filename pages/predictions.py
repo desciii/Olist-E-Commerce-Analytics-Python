@@ -63,10 +63,13 @@ def page_predictions():
     delta_pct = ((next_rev - last_rev) / last_rev * 100) if last_rev else 0
 
     return html.Div([
-        html.H1("Predictive Analysis", style={
-            "fontFamily": "'Syne', sans-serif", "fontWeight": "800",
-            "marginBottom": "4px",
-        }),
+        html.H1(
+            "Predictive Analysis",
+            style={
+                "fontFamily": "'Space Grotesk'",
+                "fontWeight": "700",
+            },
+        ),
         html.P(
             "Machine-learning forecasts trained offline on the full Olist dataset.",
             style={"color": C["muted"], "marginBottom": "32px"},

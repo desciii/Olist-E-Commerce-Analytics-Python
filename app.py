@@ -19,7 +19,9 @@ app = dash.Dash(
     external_stylesheets=[
         dbc.themes.BOOTSTRAP,
         "https://fonts.googleapis.com/css2?family=DM+Sans:wght@300;400;500;600"
-        "&family=Syne:wght@700;800&display=swap",
+        "&family=Syne:wght@700;800"
+        "&family=Space+Grotesk:wght@700;800"
+        "&display=swap",
     ],
     title="Olist E-Commerce Analytics",
     suppress_callback_exceptions=True,
