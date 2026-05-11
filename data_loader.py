@@ -7,3 +7,7 @@ DATA_DIR = os.path.join(BASE_DIR, "data")
 df = pd.read_parquet(os.path.join(DATA_DIR, "olist_merged.parquet"))
 
 delivered = df[df["order_status"] == "delivered"].copy()
+
+df["order_purchase_timestamp"] = pd.to_datetime(
+    df["order_purchase_timestamp"], errors="coerce"
+)
