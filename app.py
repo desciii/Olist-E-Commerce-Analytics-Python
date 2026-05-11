@@ -63,7 +63,7 @@ NAV_ITEMS = [
     ("lucide:truck",            " Delivery",    "delivery"),
     ("lucide:star",             " Reviews",     "reviews"),
     ("lucide:credit-card",      " Payments",    "payments"),
-    ("lucide:sparkles",         " Predictions", "predictions"),
+    ("lucide:trending-up-down",         " Predictions", "predictions"),
     ("lucide:info",             " About",       "about"),
 ]
 
