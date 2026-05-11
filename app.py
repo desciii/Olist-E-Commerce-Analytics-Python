@@ -1,12 +1,14 @@
 import dash
 from dash import dcc, html, Input, Output
 import dash_bootstrap_components as dbc
+from dash_iconify import DashIconify
 
 from theme import C
 from pages.overview import page_overview
 from pages.delivery import page_delivery
 from pages.reviews  import page_reviews
 from pages.payments import page_payments
+from pages.predictions import page_predictions
 from pages.about    import page_about
 from dash import clientside_callback
 
@@ -55,11 +57,12 @@ app.index_string = '''
 
 # ── Nav items ──────────────────────────────────────────────────────────────────
 NAV_ITEMS = [
-    ("", "Overview", "overview"),
-    ("", "Delivery", "delivery"),
-    ("", "Reviews",  "reviews"),
-    ("", "Payments", "payments"),
-    ("",  "About",    "about"),
+    ("lucide:layout-dashboard", " Overview",    "overview"),
+    ("lucide:truck",            " Delivery",    "delivery"),
+    ("lucide:star",             " Reviews",     "reviews"),
+    ("lucide:credit-card",      " Payments",    "payments"),
+    ("lucide:sparkles",         " Predictions", "predictions"),
+    ("lucide:info",             " About",       "about"),
 ]
 
 # ── Sidebar ────────────────────────────────────────────────────────────────────
@@ -106,19 +109,27 @@ sidebar = html.Div([
     html.P("Menu", className="sidebar-eyebrow"),
 
     # Nav buttons
-    *[
-        html.Button(
-            [
-                html.Span(icon, className="nav-icon"),
-                html.Span(label, className="nav-label"),
-            ],
-            id=f"btn-{tid}",
-            n_clicks=0,
-            className="nav-btn",
-            **{"data-label": label},
-        )
-        for icon, label, tid in NAV_ITEMS
-    ],
+    html.Div(
+        [
+            html.Button(
+                [
+                    DashIconify(
+                        icon=icon,
+                        width=18,
+                        height=18,
+                        className="nav-icon",
+                    ),
+                    html.Span(label, className="nav-label"),
+                ],
+                id=f"btn-{tid}",
+                n_clicks=0,
+                className="nav-btn",
+                **{"data-label": label},
+            )
+            for icon, label, tid in NAV_ITEMS
+        ],
+        className="nav-buttons"
+    ),
 
     # Footer
     html.Div([
@@ -220,11 +231,12 @@ clientside_callback(
 @app.callback(Output("page-content", "children"), Input("active-tab", "data"))
 def render(tab):
     pages = {
-        "overview": page_overview,
-        "delivery": page_delivery,
-        "reviews":  page_reviews,
-        "payments": page_payments,
-        "about":    page_about,
+        "overview":    page_overview,
+        "delivery":    page_delivery,
+        "reviews":     page_reviews,
+        "payments":    page_payments,
+        "predictions": page_predictions,
+        "about":       page_about,
     }
     return pages.get(tab, page_overview)()
 
