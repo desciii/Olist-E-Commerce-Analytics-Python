@@ -95,9 +95,18 @@ _SECTION_TIPS = {
 
     "delay": (
         "This tool estimates the chance that an order will arrive late.\n\n"
-        "The prediction is based on patterns learned from past delivered orders. "
-        "Cancelled or invalid orders were not included.\n\n"
-        "Late means the order arrived after the promised delivery date."
+
+        "The prediction is based on patterns learned from thousands of past "
+        "delivered orders. Cancelled or invalid orders were not included.\n\n"
+
+        "Model performance on historical data:\n"
+        "• Overall accuracy: 92%\n"
+        "• On-time orders are identified very reliably\n"
+        "• Late orders are rare, making them harder to detect\n\n"
+
+        "This means the model is best used as an early warning signal. "
+        "A high delay risk does not guarantee a late delivery, but it "
+        "indicates the order shares patterns seen in past delayed orders."
     ),
 
     "importance": (
