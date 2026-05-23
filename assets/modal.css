@@ -1,0 +1,36 @@
+/* assets/modal.css */
+
+.modal {
+    z-index: 9999 !important;
+}
+
+.modal-backdrop {
+    z-index: 9998 !important;
+    background-color: rgba(0, 0, 0, 0.75) !important;
+    opacity: 1 !important;
+}
+
+.modal-dialog {
+    z-index: 9999 !important;
+}
+
+.modal-content {
+    background: #161a23 !important;
+    border: 1px solid #252b38 !important;
+    border-radius: 14px !important;
+    overflow: hidden;
+}
+
+.modal-header {
+    background: #161a23 !important;
+    border-bottom: 1px solid #252b38 !important;
+}
+
+.modal-body {
+    background: #161a23 !important;
+}
+
+.modal-footer {
+    background: #161a23 !important;
+    border-top: 1px solid #252b38 !important;
+}

@@ -10,6 +10,10 @@ from theme import C, PLOTLY_LAYOUT, kpi
 _df = df.copy()
 _df["_year_month"] = _df["month"].astype(str)
 
+_VALID_STATUSES = {"delivered", "shipped", "canceled", "invoiced", "processing", "created", "approved"}
+
+_df = _df[_df["order_status"].isin(_VALID_STATUSES)]
+
 _STATUS_OPTIONS = [
     {"label": s.replace("_", " ").title(), "value": s}
     for s in sorted(_df["order_status"].dropna().unique())

@@ -12,6 +12,17 @@ C = {
     "muted":   "#6b7585",
 }
 
+C_LIGHT = {
+    "bg":      "#f4f6f9",
+    "card":    "#ffffff",
+    "border":  "#e2e6ef",
+    "accent":  "#00a884",
+    "accent2": "#e05555",
+    "accent3": "#d4a000",
+    "text":    "#1a1d23",
+    "muted":   "#6b7585",
+}
+
 # ── Shared Plotly layout ───────────────────────────────────────────────────────
 PLOTLY_LAYOUT = dict(
     paper_bgcolor="rgba(0,0,0,0)",
