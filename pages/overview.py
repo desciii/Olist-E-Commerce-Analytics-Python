@@ -90,18 +90,6 @@ def page_overview():
         # ───────────────────────── FILTER BAR ─────────────────────────
         html.Div([
 
-            # Search
-            html.Div([
-                html.Label("Search Order ID", style=LABEL_STYLE),
-                dcc.Input(
-                    id="ov-search",
-                    type="text",
-                    debounce=True,
-                    placeholder="Type Order ID",
-                    style=INPUT_STYLE ,
-                ),
-            ], style={"flex": "1 1 220px", "minWidth": "180px"}),
-
             # Status
             html.Div([
                 html.Label("Order Status", style=LABEL_STYLE),
@@ -222,7 +210,6 @@ def page_overview():
 # RESET CALLBACK
 # ─────────────────────────────────────────────
 @callback(
-    Output("ov-search", "value"),
     Output("ov-status-filter", "value"),
     Output("ov-start-ym", "value"),
     Output("ov-end-ym", "value"),
@@ -230,7 +217,7 @@ def page_overview():
     prevent_initial_call=True,
 )
 def _reset(_):
-    return "", [], _MIN_YM, _MAX_YM
+    return [], _MIN_YM, _MAX_YM
 
 # ─────────────────────────────────────────────
 # MAIN CALLBACK
@@ -240,17 +227,13 @@ def _reset(_):
     Output("ov-trend-chart", "figure"),
     Output("ov-status-chart", "figure"),
     Output("ov-filter-tags", "children"),
-    Input("ov-search", "value"),
     Input("ov-status-filter", "value"),
     Input("ov-start-ym", "value"),
     Input("ov-end-ym", "value"),
 )
-def _update(search, statuses, start_ym, end_ym):
+def _update(statuses, start_ym, end_ym):
 
     filt = _df.copy()
-
-    if search:
-        filt = filt[filt["order_id"].str.startswith(search.strip(), na=False)]
 
     if statuses:
         filt = filt[filt["order_status"].isin(statuses)]
@@ -284,8 +267,6 @@ def _update(search, statuses, start_ym, end_ym):
 
     # Tags
     tags = []
-    if search:
-        tags.append(_tag(f"Search: {search}", "#e8fff8", C["accent"], C["accent"]))
     for s in (statuses or []):
         tags.append(_tag(s.title(), "#fff0f0", C["accent3"], C["accent3"]))
     if start_ym != _MIN_YM or end_ym != _MAX_YM:

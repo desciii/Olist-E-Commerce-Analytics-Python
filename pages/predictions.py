@@ -234,7 +234,7 @@ def _pred_modal():
                 ),
                 html.P(
                     "Revenue forecasting uses linear trend extrapolation on complete "
-                    "months only — the last incomplete month was dropped to avoid "
+                    "months only. The last incomplete month was dropped to avoid "
                     "skewing the projection.",
                     style={"color": "#9ca3af", "fontSize": "13px",
                            "lineHeight": "1.75", "marginBottom": "0"},
