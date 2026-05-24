@@ -219,8 +219,8 @@ def _pred_modal():
             # Body
             html.Div([
                 html.P(
-                    "This page uses a Gradient Boosting model trained offline on historical "
-                    "Olist orders to forecast revenue and predict late delivery risk.",
+                    "This page uses a machine learning model trained offline on historical Olist Orders "
+                    "to forecast revenue and predict late delivery risk.",
                     style={"color": "#9ca3af", "fontSize": "13px",
                            "lineHeight": "1.75", "marginBottom": "10px"},
                 ),
