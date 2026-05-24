@@ -85,30 +85,24 @@ _SECTION_TIPS = {
         f"The most recent incomplete month was removed because it only contains "
         f"a few days of sales and would make revenue look artificially low."
     ),
-
     "category": (
         f"All {_n_cats} product categories were ranked by total revenue. "
         f"This chart shows the 10 categories that earned the most.\n\n"
         f"Each line represents how revenue for a category changed month by month.\n\n"
         f"Categories with missing or unclear names were removed during cleaning."
     ),
-
     "delay": (
         "This tool estimates the chance that an order will arrive late.\n\n"
-
         "The prediction is based on patterns learned from thousands of past "
         "delivered orders. Cancelled or invalid orders were not included.\n\n"
-
         "Model performance on historical data:\n"
         "• Overall accuracy: 92%\n"
         "• On-time orders are identified very reliably\n"
         "• Late orders are rare, making them harder to detect\n\n"
-
         "This means the model is best used as an early warning signal. "
         "A high delay risk does not guarantee a late delivery, but it "
         "indicates the order shares patterns seen in past delayed orders."
     ),
-
     "importance": (
         f"This chart shows which order details were most useful for predicting "
         f"late deliveries.\n\n"
@@ -123,7 +117,6 @@ _SECTION_TIPS = {
 # ── Shared components ──────────────────────────────────────────────────────────
 
 def _tooltip(text, width="280px", position="bottom"):
-    """Generic hover tooltip bubble."""
     pos_style = (
         {"top": "calc(100% + 8px)", "left": "0"}
         if position == "bottom"
@@ -144,7 +137,6 @@ def _tooltip(text, width="280px", position="bottom"):
 
 
 def _field_icon(field_name):
-    """Small ! icon with hover tooltip for input field labels."""
     return html.Span([
         html.Span("!", style={
             "display": "inline-flex", "alignItems": "center",
@@ -198,6 +190,81 @@ def _section(title, subtitle, tip_key, children):
     ], style={"marginBottom": "40px"})
 
 
+# ── Predictions context modal ──────────────────────────────────────────────────
+def _pred_modal():
+    return html.Div([
+        # Backdrop
+        html.Div(style={
+            "position": "fixed", "inset": "0",
+            "background": "rgba(0,0,0,0.65)", "zIndex": "9998",
+        }),
+        # Dialog
+        html.Div([
+            # Header
+            html.Div([
+                html.Span("◈ ", style={
+                    "background": "linear-gradient(135deg, #8b5cf6, #6366f1)",
+                    "WebkitBackgroundClip": "text",
+                    "WebkitTextFillColor": "transparent",
+                    "fontSize": "16px",
+                }),
+                html.Span("About Predictive Analysis", style={
+                    "fontFamily": "'Space Grotesk', sans-serif",
+                    "fontWeight": "700", "fontSize": "15px", "color": "#f9fafb",
+                }),
+            ], style={
+                "display": "flex", "alignItems": "center", "gap": "6px",
+                "padding": "16px 20px", "borderBottom": "1px solid #252b38",
+            }),
+            # Body
+            html.Div([
+                html.P(
+                    "This page uses a Gradient Boosting model trained offline on historical "
+                    "Olist orders to forecast revenue and predict late delivery risk.",
+                    style={"color": "#9ca3af", "fontSize": "13px",
+                           "lineHeight": "1.75", "marginBottom": "10px"},
+                ),
+                html.P(
+                    "The model was trained on delivered orders only and learned from "
+                    "8 features: freight value, item price, estimated delivery days, "
+                    "purchase day of week, purchase month, payment value, installments, "
+                    "and product category.",
+                    style={"color": "#9ca3af", "fontSize": "13px",
+                           "lineHeight": "1.75", "marginBottom": "10px"},
+                ),
+                html.P(
+                    "Revenue forecasting uses linear trend extrapolation on complete "
+                    "months only — the last incomplete month was dropped to avoid "
+                    "skewing the projection.",
+                    style={"color": "#9ca3af", "fontSize": "13px",
+                           "lineHeight": "1.75", "marginBottom": "0"},
+                ),
+            ], style={"padding": "18px 20px"}),
+            # Footer
+            html.Div([
+                html.Button("Got it", id="pred-modal-close", n_clicks=0, style={
+                    "padding": "8px 22px",
+                    "background": "linear-gradient(135deg, #00d4aa, #00a884)",
+                    "border": "none", "borderRadius": "8px",
+                    "color": "#0d0f14", "fontWeight": "700",
+                    "fontSize": "13px", "cursor": "pointer",
+                    "fontFamily": "'DM Sans', sans-serif",
+                }),
+            ], style={
+                "padding": "12px 20px", "borderTop": "1px solid #252b38",
+                "display": "flex", "justifyContent": "flex-end",
+            }),
+        ], style={
+            "position": "fixed", "top": "50%", "left": "50%",
+            "transform": "translate(-50%, -50%)",
+            "background": "#161a23", "border": "1px solid #252b38",
+            "borderRadius": "12px", "width": "420px", "maxWidth": "90vw",
+            "zIndex": "9999", "fontFamily": "'DM Sans', sans-serif",
+            "boxShadow": "0 20px 60px rgba(0,0,0,0.6)",
+        }),
+    ], id="pred-modal")
+
+
 # ══════════════════════════════════════════════════════════════════════════════
 # PAGE
 # ══════════════════════════════════════════════════════════════════════════════
@@ -211,12 +278,13 @@ def page_predictions():
 
     return html.Div([
 
+        _pred_modal(),
+
         html.H1("Predictive Analysis",
                 style={"fontFamily": "'Space Grotesk'", "fontWeight": "700"}),
         html.P("Machine-learning forecasts trained offline on the full Olist dataset.",
                style={"color": C["muted"], "marginBottom": "32px"}),
 
-        # ── 1. Revenue Forecast ────────────────────────────────────────────────
         _section("Revenue Forecast", "Linear trend extrapolation — next 6 months",
                  "forecast", [
             html.Div([
@@ -229,19 +297,16 @@ def page_predictions():
             html.Div(dcc.Graph(id="pred-revenue-chart", config={"displayModeBar": False}), style=_CARD),
         ]),
 
-        # ── 2. Category Trends ─────────────────────────────────────────────────
         _section("Top Category Revenue Trends",
                  "Monthly revenue for the 10 highest-earning product categories",
                  "category", [
             html.Div(dcc.Graph(id="pred-category-chart", config={"displayModeBar": False}), style=_CARD),
         ]),
 
-        # ── 3. Delay Risk Predictor ────────────────────────────────────────────
         _section("Order Delay Risk Predictor",
                  "Enter order details to get a late-delivery probability",
                  "delay", [
             html.Div([
-
                 html.Div([
 
                     html.Div([
@@ -312,7 +377,6 @@ def page_predictions():
             ], style=_CARD),
         ]),
 
-        # ── 4. Feature Importance ──────────────────────────────────────────────
         _section("What Drives Late Deliveries?",
                  "Feature importance from the trained gradient boosting model",
                  "importance", [
@@ -325,6 +389,15 @@ def page_predictions():
 # ══════════════════════════════════════════════════════════════════════════════
 # CALLBACKS
 # ══════════════════════════════════════════════════════════════════════════════
+
+@callback(
+    Output("pred-modal", "style"),
+    Input("pred-modal-close", "n_clicks"),
+    prevent_initial_call=True,
+)
+def _close_pred_modal(_):
+    return {"display": "none"}
+
 
 @callback(Output("pred-revenue-chart", "figure"), Input("pred-revenue-chart", "id"))
 def _render_forecast(_):

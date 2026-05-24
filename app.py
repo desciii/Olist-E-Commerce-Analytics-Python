@@ -34,7 +34,7 @@ app.index_string = '''
     <head>
         {%metas%}
         <title>{%title%}</title>
-        {%favicon%}
+        <link rel="icon" type="image/x-icon" href="/assets/favicon.ico">
         {%css%}
         <style>
             *, *::before, *::after { box-sizing: border-box; }
