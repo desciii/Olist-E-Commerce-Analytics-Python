@@ -175,7 +175,14 @@ def page_delivery():
         html.Div([
 
             html.Div(
-                dcc.Graph(id="dv-late-chart", config={"displayModeBar": False}),
+                dcc.Loading(
+                    type="circle",
+                    color=C["accent2"],
+                    children=dcc.Graph(
+                        id="dv-late-chart",
+                        config={"displayModeBar": False}
+                    ),
+                ),
                 style={
                     "background": C.get("card", "#24293e"),
                     "borderRadius": "12px",
@@ -187,7 +194,14 @@ def page_delivery():
             ),
 
             html.Div(
-                dcc.Graph(id="dv-hist-chart", config={"displayModeBar": False}),
+                dcc.Loading(
+                    type="circle",
+                    color=C["accent"],
+                    children=dcc.Graph(
+                        id="dv-hist-chart",
+                        config={"displayModeBar": False}
+                    ),
+                ),
                 style={
                     "background": C.get("card", "#24293e"),
                     "borderRadius": "12px",

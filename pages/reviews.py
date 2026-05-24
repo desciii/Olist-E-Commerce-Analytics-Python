@@ -47,9 +47,13 @@ def _tag(label, bg, color, border):
         },
     )
 
-def _chart_card(graph):
+def _chart_card(graph, color=C["accent"]):
     return html.Div(
-        graph,
+        dcc.Loading(
+            type="circle",
+            color=color,
+            children=graph,
+        ),
         className="rv-chart-card",
         style={
             "background": C.get("card", "#24293e"),
@@ -155,12 +159,27 @@ def page_reviews():
 
         # CHART GRID
         html.Div([
-            _chart_card(dcc.Graph(id="rv-dist-chart",  config={"displayModeBar": False})),
-            _chart_card(dcc.Graph(id="rv-box-chart",   config={"displayModeBar": False})),
-            _chart_card(dcc.Graph(id="rv-worst-chart", config={"displayModeBar": False})),
-            _chart_card(dcc.Graph(id="rv-best-chart",  config={"displayModeBar": False})),
-        ], className="rv-charts-grid"),
+            _chart_card(
+                dcc.Graph(id="rv-dist-chart", config={"displayModeBar": False}),
+                color=C["accent"]
+            ),
 
+            _chart_card(
+                dcc.Graph(id="rv-box-chart", config={"displayModeBar": False}),
+                color=C["accent3"]
+            ),
+
+            _chart_card(
+                dcc.Graph(id="rv-worst-chart", config={"displayModeBar": False}),
+                color=C["accent2"]
+            ),
+
+            _chart_card(
+                dcc.Graph(id="rv-best-chart", config={"displayModeBar": False}),
+                color="#54a0ff"
+            ),
+
+        ], className="rv-charts-grid"),
     ])
 
 

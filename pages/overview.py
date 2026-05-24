@@ -176,7 +176,13 @@ def page_overview():
         html.Div([
 
             html.Div(
-                dcc.Graph(id="ov-trend-chart", config={"displayModeBar": False}),
+                dcc.Loading(
+                    type="circle",
+                    children=dcc.Graph(
+                        id="ov-trend-chart",
+                        config={"displayModeBar": False}
+                    ),
+                ),
                 style={
                     "background": C.get("card", "#24293e"),
                     "borderRadius": "12px",
@@ -188,7 +194,13 @@ def page_overview():
             ),
 
             html.Div(
-                dcc.Graph(id="ov-status-chart", config={"displayModeBar": False}),
+                dcc.Loading(
+                    type="circle",
+                    children=dcc.Graph(
+                        id="ov-status-chart",
+                        config={"displayModeBar": False}
+                    ),
+                ),
                 style={
                     "background": C.get("card", "#24293e"),
                     "borderRadius": "12px",

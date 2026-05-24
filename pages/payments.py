@@ -181,7 +181,14 @@ def page_payments():
         html.Div([
 
             html.Div(
-                dcc.Graph(id="pm-type-chart", config={"displayModeBar": False}),
+                dcc.Loading(
+                    type="circle",
+                    color=C["accent2"],
+                    children=dcc.Graph(
+                        id="pm-type-chart",
+                        config={"displayModeBar": False}
+                    ),
+                ),
                 style={
                     "background": C.get("card", "#24293e"),
                     "borderRadius": "12px",
@@ -193,7 +200,14 @@ def page_payments():
             ),
 
             html.Div(
-                dcc.Graph(id="pm-rev-chart", config={"displayModeBar": False}),
+                dcc.Loading(
+                    type="circle",
+                    color=C["accent3"],
+                    children=dcc.Graph(
+                        id="pm-rev-chart",
+                        config={"displayModeBar": False}
+                    ),
+                ),
                 style={
                     "background": C.get("card", "#24293e"),
                     "borderRadius": "12px",
@@ -205,7 +219,14 @@ def page_payments():
             ),
 
             html.Div(
-                dcc.Graph(id="pm-install-chart", config={"displayModeBar": False}),
+                dcc.Loading(
+                    type="circle",
+                    color=C["accent"],
+                    children=dcc.Graph(
+                        id="pm-install-chart",
+                        config={"displayModeBar": False}
+                    ),
+                ),
                 style={
                     "background": C.get("card", "#24293e"),
                     "borderRadius": "12px",

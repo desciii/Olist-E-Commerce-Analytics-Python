@@ -294,13 +294,33 @@ def page_predictions():
                     f"{'+' if delta_pct >= 0 else ''}{delta_pct:.1f}%",
                     color=C["accent"] if delta_pct >= 0 else C["accent2"]),
             ], style={"display": "flex", "gap": "16px", "flexWrap": "wrap", "marginBottom": "20px"}),
-            html.Div(dcc.Graph(id="pred-revenue-chart", config={"displayModeBar": False}), style=_CARD),
+            html.Div(
+                dcc.Loading(
+                    type="circle",
+                    color=C["accent"],
+                    children=dcc.Graph(
+                        id="pred-revenue-chart",
+                        config={"displayModeBar": False}
+                    ),
+                ),
+                style=_CARD
+            ),
         ]),
 
         _section("Top Category Revenue Trends",
                  "Monthly revenue for the 10 highest-earning product categories",
                  "category", [
-            html.Div(dcc.Graph(id="pred-category-chart", config={"displayModeBar": False}), style=_CARD),
+            html.Div(
+                dcc.Loading(
+                    type="circle",
+                    color=C["accent3"],
+                    children=dcc.Graph(
+                        id="pred-category-chart",
+                        config={"displayModeBar": False}
+                    ),
+                ),
+                style=_CARD
+            ),
         ]),
 
         _section("Order Delay Risk Predictor",
@@ -372,7 +392,11 @@ def page_predictions():
                     "fontSize": "14px", "cursor": "pointer", "marginBottom": "20px",
                 }),
 
-                html.Div(id="pred-delay-result"),
+                dcc.Loading(
+                    type="circle",
+                    color=C["accent"],
+                    children=html.Div(id="pred-delay-result"),
+                ),
 
             ], style=_CARD),
         ]),
@@ -380,7 +404,17 @@ def page_predictions():
         _section("What Drives Late Deliveries?",
                  "Feature importance from the trained gradient boosting model",
                  "importance", [
-            html.Div(dcc.Graph(id="pred-importance-chart", config={"displayModeBar": False}), style=_CARD),
+            html.Div(
+                dcc.Loading(
+                    type="circle",
+                    color=C["accent2"],
+                    children=dcc.Graph(
+                        id="pred-importance-chart",
+                        config={"displayModeBar": False}
+                    ),
+                ),
+                style=_CARD
+            ),
         ]),
 
     ])
@@ -536,7 +570,14 @@ def _predict_delay(_, cat, price, freight, payment, installments, est_days, dow,
                       margin=dict(l=30, r=30, t=60, b=20), height=260)
 
     return html.Div([
-        dcc.Graph(figure=fig, config={"displayModeBar": False}),
+        dcc.Loading(
+            type="circle",
+            color=color,
+            children=dcc.Graph(
+                figure=fig,
+                config={"displayModeBar": False}
+            ),
+        ),
         html.P(
             f"This order has a {pct:.1f}% chance of arriving after the estimated date "
             f"based on the trained model.",
