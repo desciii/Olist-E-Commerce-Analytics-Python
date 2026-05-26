@@ -4,7 +4,7 @@ import plotly.express as px
 from data_loader import df
 from theme import C, PLOTLY_LAYOUT, kpi
 
-_d = df.copy()
+_d = df
 
 _CAT_OPTIONS = [
     {"label": c.replace("_", " ").title(), "value": c}
@@ -206,7 +206,7 @@ def _reset(_):
     Input("rv-days-filter",     "value"),
 )
 def _update(categories, min_score, max_days):
-    filt = _d.copy()
+    filt = _d
 
     if categories:
         filt = filt[filt["product_category_name_english"].isin(categories)]
@@ -248,6 +248,7 @@ def _update(categories, min_score, max_days):
                           showlegend=False)
     fig_box.update_yaxes(title="Delivery Days")
     fig_box.update_xaxes(title="Review Score")
+    fig_box.update_traces(boxpoints=False)
 
     # ── Worst / best categories (unchanged) ───────────────────────────────────
     cat_review = (

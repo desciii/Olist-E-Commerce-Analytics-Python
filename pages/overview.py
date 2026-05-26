@@ -7,7 +7,7 @@ from theme import C, PLOTLY_LAYOUT, kpi
 # ─────────────────────────────────────────────
 # DATA PREP
 # ─────────────────────────────────────────────
-_df = df.copy()
+_df = df
 _df["_year_month"] = _df["month"].astype(str)
 
 _VALID_STATUSES = {"delivered", "shipped", "canceled", "invoiced", "processing", "created", "approved"}
@@ -245,7 +245,7 @@ def _reset(_):
 )
 def _update(statuses, start_ym, end_ym):
 
-    filt = _df.copy()
+    filt = _df
 
     if statuses:
         filt = filt[filt["order_status"].isin(statuses)]
@@ -268,13 +268,18 @@ def _update(statuses, start_ym, end_ym):
     ], style={"display": "flex", "gap": "16px", "flexWrap": "wrap"})
 
     # Charts
-    monthly = filt.groupby("_year_month")["payment_value"].sum().reset_index()
+    monthly = (
+        filt.groupby("_year_month", observed=True)["payment_value"]
+        .sum()
+        .reset_index()
+    )
     fig_trend = px.area(monthly, x="_year_month", y="payment_value")
     fig_trend.update_layout(**PLOTLY_LAYOUT, title="Monthly Revenue")
 
     sc = filt["order_status"].value_counts().reset_index()
     sc.columns = ["status", "count"]
     fig_status = px.pie(sc, names="status", values="count")
+    fig_status.update_traces(textinfo="percent")
     fig_status.update_layout(**PLOTLY_LAYOUT, title="Order Status Breakdown")
 
     # Tags

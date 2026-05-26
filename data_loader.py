@@ -17,4 +17,4 @@ delivered = df[
     df["order_delivered_customer_date"].notna() &
     df["order_estimated_delivery_date"].notna() &
     df["delivery_days"].notna()
-].copy()
+]

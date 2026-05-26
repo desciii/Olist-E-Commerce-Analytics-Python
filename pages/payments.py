@@ -7,12 +7,17 @@ from theme import C, PLOTLY_LAYOUT, kpi
 # ─────────────────────────────────────────────
 # DATA
 # ─────────────────────────────────────────────
-_p = df[[
-    "order_id",
-    "payment_type",
-    "payment_value",
-    "payment_installments"
-]].drop_duplicates().copy()
+_p = (
+    df[
+        [
+            "order_id",
+            "payment_type",
+            "payment_value",
+            "payment_installments",
+        ]
+    ]
+    .drop_duplicates(subset="order_id")
+)
 
 _TYPE_OPTIONS = [
     {"label": t.replace("_", " ").title(), "value": t}
@@ -272,7 +277,7 @@ def _reset(_):
 )
 def _update(types, max_install, min_val):
 
-    filt = _p.copy()
+    filt = _p
 
     if types:
         filt = filt[filt["payment_type"].isin(types)]
@@ -307,13 +312,25 @@ def _update(types, max_install, min_val):
     fig_type = px.pie(pay_type, names="type", values="count")
     fig_type.update_layout(**PLOTLY_LAYOUT, title="Payment Type Breakdown")
 
-    rev_by_type = filt.groupby("payment_type")["payment_value"].sum().reset_index()
+    rev_by_type = (
+        filt.groupby("payment_type", observed=True)["payment_value"]
+        .sum()
+        .reset_index()
+    )
 
     fig_rev = px.bar(rev_by_type, x="payment_type", y="payment_value")
     fig_rev.update_layout(**PLOTLY_LAYOUT, title="Revenue by Payment Type")
 
-    install = filt[filt["payment_installments"] > 0]
-    install_dist = install["payment_installments"].value_counts().sort_index().reset_index()
+    install_dist = (
+        filt.loc[
+            filt["payment_installments"] > 0,
+            "payment_installments"
+        ]
+        .value_counts()
+        .sort_index()
+        .reset_index()
+    )
+
     install_dist.columns = ["installments", "count"]
 
     fig_install = px.bar(install_dist, x="installments", y="count")

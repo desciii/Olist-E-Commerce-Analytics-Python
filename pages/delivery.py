@@ -246,7 +246,7 @@ def _reset(_):
 )
 def _update(states, max_days, late_filter):
 
-    filt = _d.copy()
+    filt = _d
 
     if states:
         filt = filt[filt["customer_state"].isin(states)]
@@ -273,7 +273,7 @@ def _update(states, max_days, late_filter):
 
     # Late by state
     late_by_state = (
-        filt.groupby("customer_state")["late"]
+    filt.groupby("customer_state", observed=True)["late"]
         .mean().mul(100).reset_index()
         .sort_values("late", ascending=True)
         .tail(15)
