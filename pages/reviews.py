@@ -1,10 +1,15 @@
 from dash import dcc, html, Input, Output, callback
 import plotly.express as px
+import pandas as pd
 
 from data_loader import df
 from theme import C, PLOTLY_LAYOUT, kpi
 
-_d = df
+# ── Module-level pre-computation ─────────────────────────────
+_d = df.copy()
+_d["product_category_name_english"] = (
+    _d["product_category_name_english"].astype("category")
+)
 
 _CAT_OPTIONS = [
     {"label": c.replace("_", " ").title(), "value": c}
@@ -16,6 +21,17 @@ _SCORE_OPTIONS = [
     for i in range(1, 6)
 ]
 
+# Pre-compute full category rating aggregation once at startup.
+# Callbacks will slice this instead of re-grouping the raw frame.
+_BASE_CAT_REVIEW = (
+    _d.groupby("product_category_name_english", observed=True)["review_score"]
+    .mean()
+    .dropna()
+    .sort_values()
+    .reset_index()
+)
+
+# ── Styles ───────────────────────────────────────────────────
 _LABEL_STYLE = {
     "fontSize": "11px",
     "fontWeight": "600",
@@ -32,6 +48,7 @@ _DROPDOWN_STYLE = {
     "color": "black",
 }
 
+# ── Helpers ──────────────────────────────────────────────────
 def _tag(label, bg, color, border):
     return html.Span(
         label,
@@ -47,13 +64,10 @@ def _tag(label, bg, color, border):
         },
     )
 
+
 def _chart_card(graph, color=C["accent"]):
     return html.Div(
-        dcc.Loading(
-            type="circle",
-            color=color,
-            children=graph,
-        ),
+        dcc.Loading(type="circle", color=color, children=graph),
         className="rv-chart-card",
         style={
             "background": C.get("card", "#24293e"),
@@ -63,9 +77,10 @@ def _chart_card(graph, color=C["accent"]):
         },
     )
 
+
+# ── Layout ───────────────────────────────────────────────────
 def page_reviews():
     return html.Div([
-
         html.H1(
             "Customer Reviews",
             style={"fontFamily": "'Space Grotesk'", "fontWeight": "700"},
@@ -159,30 +174,15 @@ def page_reviews():
 
         # CHART GRID
         html.Div([
-            _chart_card(
-                dcc.Graph(id="rv-dist-chart", config={"displayModeBar": False}),
-                color=C["accent"]
-            ),
-
-            _chart_card(
-                dcc.Graph(id="rv-box-chart", config={"displayModeBar": False}),
-                color=C["accent3"]
-            ),
-
-            _chart_card(
-                dcc.Graph(id="rv-worst-chart", config={"displayModeBar": False}),
-                color=C["accent2"]
-            ),
-
-            _chart_card(
-                dcc.Graph(id="rv-best-chart", config={"displayModeBar": False}),
-                color="#54a0ff"
-            ),
-
+            _chart_card(dcc.Graph(id="rv-dist-chart",  config={"displayModeBar": False}), color=C["accent"]),
+            _chart_card(dcc.Graph(id="rv-box-chart",   config={"displayModeBar": False}), color=C["accent3"]),
+            _chart_card(dcc.Graph(id="rv-worst-chart", config={"displayModeBar": False}), color=C["accent2"]),
+            _chart_card(dcc.Graph(id="rv-best-chart",  config={"displayModeBar": False}), color="#54a0ff"),
         ], className="rv-charts-grid"),
     ])
 
 
+# ── Callbacks ────────────────────────────────────────────────
 @callback(
     Output("rv-cat-filter",      "value"),
     Output("rv-minscore-filter", "value"),
@@ -206,21 +206,27 @@ def _reset(_):
     Input("rv-days-filter",     "value"),
 )
 def _update(categories, min_score, max_days):
-    filt = _d
+
+    # ── Single-pass boolean mask filter ──────────────────────
+    mask = pd.Series(True, index=_d.index)
 
     if categories:
-        filt = filt[filt["product_category_name_english"].isin(categories)]
+        mask &= _d["product_category_name_english"].isin(categories)
     if min_score and min_score > 1:
-        filt = filt[filt["review_score"] >= min_score]
+        mask &= _d["review_score"] >= min_score
     if max_days:
-        filt = filt[filt["delivery_days"] <= max_days]
+        mask &= _d["delivery_days"] <= max_days
 
-    empty = len(filt) == 0
+    filt = _d[mask]
+    empty = filt.empty
 
-    avg_score = filt["review_score"].mean()              if not empty else 0
-    n_reviews = filt["review_score"].count()             if not empty else 0
-    pct_5star = ((filt["review_score"] == 5).mean()*100) if not empty else 0
-    pct_1star = ((filt["review_score"] == 1).mean()*100) if not empty else 0
+    # ── KPI aggregations ─────────────────────────────────────
+    scores = filt["review_score"] if not empty else pd.Series(dtype=float)
+
+    avg_score = scores.mean()      if not empty else 0.0
+    n_reviews = scores.count()     if not empty else 0
+    pct_5star = (scores == 5).mean() * 100 if not empty else 0.0
+    pct_1star = (scores == 1).mean() * 100 if not empty else 0.0
 
     kpis_el = html.Div([
         kpi("Avg Review Score", f"{avg_score:.2f} / 5", color=C["accent3"]),
@@ -229,49 +235,80 @@ def _update(categories, min_score, max_days):
         kpi("1-Star Rate",      f"{pct_1star:.1f}%",    color=C["accent2"]),
     ], style={"display": "flex", "gap": "16px", "flexWrap": "wrap"})
 
-    # ── Score distribution ─────────────────────────────────────────────────────
-    score_dist = filt["review_score"].value_counts().sort_index().reset_index()
+    # ── Review Score Distribution ─────────────────────────────
+    score_dist = (
+        scores.value_counts()
+        .sort_index()
+        .reset_index()
+    )
     score_dist.columns = ["score", "count"]
+
     fig_dist = px.bar(score_dist, x="score", y="count")
     fig_dist.update_layout(**PLOTLY_LAYOUT, title="Review Score Distribution")
 
-    # ── Box plot: delivery days per star rating ────────────────────────────────
-    box_data = filt.dropna(subset=["delivery_days", "review_score"]).copy()
-    box_data["star"] = box_data["review_score"].astype(int).astype(str) + " Star"
+    # ── Box Plot ──────────────────────────────────────────────
+    box_data = (
+        filt.dropna(subset=["delivery_days", "review_score"])
+        .sample(min(5000, len(filt)), random_state=42)
+    )
+    box_data = box_data.assign(
+        star=box_data["review_score"].astype(int).astype(str) + " Star"
+    )
+
     fig_box = px.box(
-        box_data, x="star", y="delivery_days",
+        box_data,
+        x="star",
+        y="delivery_days",
         color="star",
-        color_discrete_sequence=[C["accent2"], "#ff9f43", C["accent3"], "#54a0ff", C["accent"]],
+        color_discrete_sequence=[
+            C["accent2"], "#ff9f43", C["accent3"], "#54a0ff", C["accent"],
+        ],
         category_orders={"star": ["1 Star", "2 Star", "3 Star", "4 Star", "5 Star"]},
     )
-    fig_box.update_layout(**PLOTLY_LAYOUT, title="Delivery Days by Review Score",
-                          showlegend=False)
+    fig_box.update_layout(**PLOTLY_LAYOUT, title="Delivery Days by Review Score", showlegend=False)
     fig_box.update_yaxes(title="Delivery Days")
     fig_box.update_xaxes(title="Review Score")
-    fig_box.update_traces(boxpoints=False)
+    fig_box.update_traces(boxpoints=False, hovertemplate=None)
 
-    # ── Worst / best categories (unchanged) ───────────────────────────────────
-    cat_review = (
-        filt.groupby("product_category_name_english")["review_score"]
-        .mean().dropna().sort_values().reset_index()
-    )
+    # ── Category Ratings (slice pre-computed aggregation) ─────
+    if categories:
+        # Only re-aggregate for the selected subset — still far cheaper
+        # than grouping the full raw frame every time
+        cat_review = (
+            filt.groupby("product_category_name_english", observed=True)["review_score"]
+            .mean()
+            .dropna()
+            .sort_values()
+            .reset_index()
+        )
+    else:
+        # No category filter: just slice the pre-built table
+        cat_review = _BASE_CAT_REVIEW.copy()
 
-    fig_worst = px.bar(cat_review.head(10), x="review_score",
-                       y="product_category_name_english", orientation="h")
+    if min_score > 1 or (max_days and max_days < 60):
+        # Score/days filters change the per-category mean — must re-aggregate
+        cat_review = (
+            filt.groupby("product_category_name_english", observed=True)["review_score"]
+            .mean()
+            .dropna()
+            .sort_values()
+            .reset_index()
+        )
+
+    fig_worst = px.bar(cat_review.head(10), x="review_score", y="product_category_name_english", orientation="h")
     fig_worst.update_layout(**PLOTLY_LAYOUT, title="Lowest Rated Categories")
 
-    fig_best = px.bar(cat_review.tail(10), x="review_score",
-                      y="product_category_name_english", orientation="h")
+    fig_best = px.bar(cat_review.tail(10), x="review_score", y="product_category_name_english", orientation="h")
     fig_best.update_layout(**PLOTLY_LAYOUT, title="Highest Rated Categories")
 
-    # ── Tags ──────────────────────────────────────────────────────────────────
+    # ── Filter Tags ───────────────────────────────────────────
     tags = []
+
     if categories:
-        for c in categories:
-            tags.append(_tag(c.title(), "#fff0f0", C["accent3"], C["accent3"]))
+        tags += [_tag(c.title(), "#fff0f0", C["accent3"], C["accent3"]) for c in categories]
     if min_score and min_score > 1:
         tags.append(_tag(f"{min_score}+ Stars", "#e8fff8", C["accent"], C["accent"]))
-    if max_days < 60:
+    if max_days and max_days < 60:
         tags.append(_tag(f"≤ {max_days} Days", "#eef6ff", "#4a90e2", "#4a90e2"))
     if not tags:
         tags = [_tag("All data", "transparent", C["muted"], C.get("border", "#2a2e3e"))]
