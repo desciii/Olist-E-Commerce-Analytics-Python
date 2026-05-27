@@ -116,6 +116,37 @@ def page_about():
             feature_row("Predictions",  "Revenue forecast for the next 6 months, top category trends, and an order delay risk predictor powered by a trained machine learning model.", color="#8b5cf6", last=True),
         ]),
 
+        # ── Real-world problems ────────────────────────────────────────────────
+        card([
+            h("Real-World Problems This Dashboard Tackles"),
+            feature_row(
+                "Why are customers unhappy?",
+                "Low review scores are expensive — they hurt seller rankings and drive churn. The Reviews page pinpoints exactly which product categories consistently disappoint customers, so businesses can fix sourcing, packaging, or seller quality before it compounds.",
+                color=C["accent2"],
+            ),
+            feature_row(
+                "Where are deliveries failing?",
+                "Late deliveries are the single biggest driver of bad reviews in e-commerce. The Delivery page maps late delivery rates by Brazilian state, revealing whether delays are concentrated in specific regions — a logistics routing problem — or spread evenly — a carrier problem.",
+                color=C["accent3"],
+            ),
+            feature_row(
+                "Will this order arrive on time?",
+                "Olist sellers have no easy way to flag at-risk orders before they go late. The Predictions page fills that gap — given the order details, the model estimates late delivery probability so sellers and ops teams can prioritize follow-ups proactively.",
+                color="#8b5cf6",
+            ),
+            feature_row(
+                "Is the business growing?",
+                "Month-to-month revenue on its own is noisy. The Overview and Predictions pages combine historical trends with a 6-month forecast so management can distinguish seasonal dips from genuine slowdowns and plan inventory and marketing spend accordingly.",
+                color=C["accent"],
+            ),
+            feature_row(
+                "How are customers paying?",
+                "Brazil has unique payment behavior — installments are common, boleto is widely used, and payment method affects fraud risk and cash flow timing. The Payments page breaks down revenue and volume by payment type so finance teams can optimize checkout offerings.",
+                color="#4a90e2",
+                last=True,
+            ),
+        ]),
+
         # ── Tech stack ─────────────────────────────────────────────────────────
         card([
             h("Built With"),
